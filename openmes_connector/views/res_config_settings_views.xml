@@ -50,6 +50,15 @@
                                  help="OpenMES order numbers are built as PREFIX-SALEORDER-LINEID or PREFIX-MO-NAME.">
                             <field name="openmes_order_prefix"/>
                         </setting>
+                        <setting id="openmes_mo_extra_cost" string="OpenMES costs in the manufacturing order cost"
+                                 company_dependent="1"
+                                 help="Manufacturing orders mode only. When an MO is closed, Odoo uses the OpenMES settlement (fetched then if needed) and sets the MO's Extra Unit Cost to (labour + additional costs) / produced quantity. Material costs are not added: Odoo values the components itself.">
+                            <field name="openmes_mo_extra_cost"/>
+                            <field name="openmes_mo_extra_cost_available" invisible="1"/>
+                            <div class="text-warning mt8" invisible="openmes_mo_extra_cost_available">
+                                Requires the Manufacturing cost accounting module (mrp_account); without it this option does nothing.
+                            </div>
+                        </setting>
                     </block>
                     <block title="Master Data" name="openmes_master_data">
                         <setting id="openmes_sync" string="Synchronisation"

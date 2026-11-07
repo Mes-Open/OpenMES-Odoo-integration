@@ -55,6 +55,11 @@ class OpenmesWorkOrder(models.Model):
         readonly=True,
         copy=False,
     )
+    serial_activity_scheduled = fields.Boolean(
+        "Manual Close Activity Created",
+        readonly=True,
+        copy=False,
+    )
 
     @api.depends(
         "planned_qty",
@@ -223,6 +228,41 @@ class OpenmesWorkOrder(models.Model):
             uom=self.product_uom_id.name,
         )
         return summary, text
+
+    def _openmes_serial_close_texts(self):
+        self.ensure_one()
+        production = self.production_id
+        summary = self.env._("OpenMES: close the manufacturing order manually")
+        text = self.env._(
+            "OpenMES finished work order %(order)s with %(qty)s %(uom)s produced. %(product)s is "
+            "tracked by serial numbers, so Odoo did not close manufacturing order %(production)s: "
+            "assign the serial numbers and mark it as done.",
+            order=self.name,
+            qty=_qty_str(self.produced_qty, self.product_id.uom_id.rounding),
+            uom=self.product_uom_id.name,
+            product=production.product_id.display_name,
+            production=production.name,
+        )
+        return summary, text
+
+    def _openmes_serial_left_open(self):
+        """A serial-tracked MO is never closed from OpenMES: tell who closes it."""
+        self.ensure_one()
+        message = _(
+            "The manufacturing order was not closed: serial-tracked products must be closed manually "
+            "(OpenMES does not report serial numbers). OpenMES produced %(qty)s %(uom)s in work order "
+            "%(order)s.",
+            qty=_qty_str(self.produced_qty, self.product_id.uom_id.rounding),
+            uom=self.product_uom_id.name,
+            order=self.name,
+        )
+        self.last_error = message
+        self._post_on_source(message)
+        if not self.serial_activity_scheduled:
+            # Marked before scheduling: an activity marked done is deleted, so
+            # only this field keeps a retry from creating it again.
+            self.serial_activity_scheduled = True
+            self._openmes_schedule_attention(lambda record: record._openmes_serial_close_texts())
 
     # ── Hooks into the pull ──────────────────────────────────────────────────
 

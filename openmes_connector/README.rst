@@ -90,6 +90,20 @@ Features
   work order only when the original MO is in OpenMES, so an MO created before
   switching modes never reaches OpenMES. An MO whose work order is still open
   in OpenMES (or whose cancellation is not sent yet) cannot be deleted.
+* **Lot of the finished product**: OpenMES does not report lot numbers of
+  finished products. When the finished product is tracked by lots and the MO
+  has no lot yet, Odoo creates one with its standard lot numbering (the same
+  as the MO's *Generate* button) before closing the MO, and posts it on the
+  MO and the work order; the close message names the lot too. A lot set by
+  hand on the MO before the close is used instead. The lot is kept even if
+  the close then fails (e.g. a component lot is missing), so **Close
+  Manufacturing Order** reuses it. A backorder gets its own lot when it is
+  closed. The work order form shows it as *Finished Product Lot*. Products
+  tracked by serial numbers are never closed automatically: the work order's
+  last error and a message on the MO say so, and the MO's responsible (or the
+  salesperson of the sale order) gets one To-Do to assign the serial numbers
+  and close the MO in Odoo. Once the MO is marked as done (by OpenMES or by
+  hand), the "could not close" error of its finished work orders is cleared.
 * **Quantity differences**: Odoo never corrects a document on its own when
   OpenMES ends up with another quantity; a person gets a *To-Do* activity on
   the sale order (the salesperson) or, for an MO work order, on the MO (its
@@ -115,7 +129,16 @@ Features
   on the sale order (or MO). The status pull and the webhook only mark the
   order *pending*, so they never wait for the settlement and a failed fetch
   never undoes the status; a failure is retried every 15 minutes up to five
-  times. The figures are information only: nothing is booked in accounting.
+  times. The figures are information only: nothing is booked in accounting,
+  unless the MO cost option below is on.
+* **OpenMES costs in the MO cost** (manufacturing orders mode, per company,
+  off by default): when an MO in OpenMES is closed, its *Extra Unit Cost*
+  (``mrp_account``) is set to (OpenMES labour + additional costs) ÷ the
+  quantity being closed, so the finished product's valuation includes them.
+  The settlement is fetched during the close if it is not stored yet; if
+  that fails, the MO is closed as before and its chatter says the costs were
+  not added. OpenMES material costs are never added (Odoo values the
+  components itself).
 * **Master data**: flagged products become OpenMES product types, the
   operations of their BoM become the OpenMES routing (process template, a new
   version per change), their BoM components become materials, and each BoM
@@ -357,6 +380,9 @@ mean:
   machine cost, so none is included.
 * *Cost per Unit*: total cost ÷ produced quantity (0 when nothing was
   produced).
+* *Material Cost*, *Labour Cost*, *Additional Costs*: the three parts of the
+  total cost (``costs.materials.total``, ``costs.labor.total``,
+  ``costs.additional.total``).
 * *Cost Currency*: the code OpenMES sent, shown as is. The amounts are never
   converted to the company currency; *Cost Currency in Odoo* is only filled
   when Odoo knows the code. *Mixed Currencies* means some cost items were in
@@ -374,6 +400,35 @@ followed by the Odoo work center, e.g. ``BREAD-01: steps.1.workstation_code:
 Workstation 'WS-OVEN' not found (Odoo work center: Oven)``. Create the
 workstation in OpenMES (on the product's line) or correct the work center's
 *OpenMES Workstation Code*; the whole routing is retried by the next sync.
+
+**OpenMES costs in the MO cost.** Switch on *Add OpenMES labour and
+additional costs to the manufacturing order cost* in **Settings > OpenMES >
+Work Orders** (for the company of the Settings form; admins only). From then
+on, every MO with an OpenMES work order that is closed — automatically when
+OpenMES reports it *Done*, or by hand — gets:
+
+* **Added**: the OpenMES labour (``labor.total``: logged work time × pay
+  rates) and additional costs (``additional.total``: manually booked costs),
+  as the MO's *Extra Unit Cost* = (labour + additional) ÷ the quantity being
+  closed, in the product's unit of measure. Odoo multiplies it back by that
+  quantity, so the whole OpenMES amount is booked on the finished product. An
+  *Extra Unit Cost* entered by hand is replaced (the note names the old one).
+* **Not added**: OpenMES material costs (Odoo values the consumed components
+  from its own stock valuation — adding them would count them twice) and
+  machine cost (OpenMES has none).
+* **Not set, with a chatter note saying why**: the settlement is in another
+  currency than the company's (or an unknown one), OpenMES reports
+  *Mixed Currencies*, the settlement cannot be fetched (OpenMES error, time
+  out, invalid data, an OpenMES without settlements), or the work order is
+  not *Done* in OpenMES yet when the MO is closed by hand. The MO is closed
+  anyway.
+
+When the stock valuation uses it: the *Extra Unit Cost* enters the unit cost
+of the finished product only when its product category's costing method is
+*FIFO* or *Average Cost (AVCO)*; with *Standard Price* the finished goods stay
+at the standard price. With *Automated* inventory valuation the value is also
+posted to the stock accounts in a journal entry; with *Manual* valuation it
+only changes the stock valuation layers.
 
 Stock documents are listed under **Sales > OpenMES > Stock Documents** and
 **Manufacturing > Manufacturing > OpenMES Stock Documents** (inventory and
@@ -512,8 +567,13 @@ Known limitations
   rounding.
 * Manufacturing orders mode: work orders carry no unit price. Marking an MO
   done (or partly done) by hand in Odoo does not finish the OpenMES order.
-  Lot and serial numbers are not assigned automatically, so a tracked product
-  or component makes the automatic close fail until someone sets them and
+  Finished products tracked by lots get a lot from Odoo, but OpenMES never
+  receives that lot number. Finished products tracked by serial numbers are
+  never closed automatically: assign the serial numbers and mark the MO done
+  in Odoo. Marking the MO done clears the work order's last error, but the
+  To-Do stays open until its assignee marks it done. Lot and serial numbers of
+  components and by-products are not assigned automatically, so a tracked
+  component makes the automatic close fail until someone sets them and
   clicks **Close Manufacturing Order**; a close that needs a person's
   confirmation in Odoo (e.g. a strict BoM consumption warning) fails the same
   way, and until then the work order shows the quantity difference. The MO
@@ -524,10 +584,26 @@ Known limitations
   MO itself is cancelled. A flagged product sold from stock (no MO) never
   reaches OpenMES in this mode.
 * Settlement: fetched once per work order — consumption or costs recorded in
-  OpenMES after the order was done are not picked up. The cost is not booked
-  in accounting, does not change the product cost or the MO valuation, and is
-  never converted between currencies. Consumption booked against a lot without
+  OpenMES after the order was done are not picked up. Unless the MO cost
+  option is on (below), the cost is not booked in accounting and does not
+  change the product cost or the MO valuation. It is never converted between
+  currencies. Consumption booked against a lot without
   a material allocation in OpenMES is not included, and at most 1000
   consumption lines are kept. Requires an OpenMES version that supports
   ``include`` on ``GET /work-orders/{id}``; with an older one the fetch fails
   with a message saying so.
+* OpenMES costs in the MO cost: set only at the close, because Odoo values
+  the finished product once, when the MO is marked done, and has no way to
+  revalue it consistently afterwards. An MO closed without them (fetch
+  failed, other or mixed currency, option switched on later, MO closed by
+  hand before OpenMES finished) is not corrected later, even when the cron
+  fetches the settlement afterwards. Needs Odoo's *Manufacturing* cost
+  accounting (``mrp_account``, installed automatically with stock
+  accounting); without it the option does nothing (the settings say so).
+  The settlement fetch runs inside the close: up to 20 seconds per MO, also
+  for a close by hand. Odoo also adds the cost of time logged on Odoo work
+  orders (work centre cost per hour): logging that time as well counts the
+  labour twice — leave it out or set the work centre cost to 0. Only one
+  finished OpenMES work order per MO is used; with several none is added. An
+  MO with by-products shares the added cost with them as Odoo's cost share
+  says.

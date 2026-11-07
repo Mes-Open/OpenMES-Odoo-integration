@@ -22,6 +22,7 @@ OPENMES_COMPANY_FIELDS = (
     "openmes_default_line_id",
     "openmes_order_prefix",
     "openmes_order_source",
+    "openmes_mo_extra_cost",
 )
 
 
@@ -60,6 +61,15 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         groups="base.group_system",
     )
+    openmes_mo_extra_cost = fields.Boolean(
+        "Add OpenMES labour and additional costs to the manufacturing order cost",
+        related="company_id.openmes_mo_extra_cost",
+        readonly=False,
+        groups="base.group_system",
+    )
+    openmes_mo_extra_cost_available = fields.Boolean(
+        "Manufacturing Cost Accounting Installed", compute="_compute_openmes_mo_extra_cost_available"
+    )
     openmes_webhook_registered = fields.Boolean("Webhook Registered", compute="_compute_openmes_webhook")
     openmes_webhook_id = fields.Integer("OpenMES Webhook ID", compute="_compute_openmes_webhook")
     openmes_webhook_url = fields.Char(
@@ -95,6 +105,11 @@ class ResConfigSettings(models.TransientModel):
             settings.openmes_webhook_id = webhook_id
             settings.openmes_webhook_url = url
             settings.openmes_webhook_insecure = urlparse(url).scheme != "https"
+
+    def _compute_openmes_mo_extra_cost_available(self):
+        available = self.env["mrp.production"]._openmes_has_extra_cost()
+        for settings in self:
+            settings.openmes_mo_extra_cost_available = available
 
     def _openmes_webhook_target_url(self):
         base = (self.env["ir.config_parameter"].sudo().get_param("web.base.url") or "").strip().rstrip("/")

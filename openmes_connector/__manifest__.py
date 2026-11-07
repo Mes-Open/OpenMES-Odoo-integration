@@ -1,11 +1,13 @@
 {
     "name": "OpenMES Connector",
-    "version": "18.0.1.1.11",
+    "version": "18.0.1.1.14",
     "category": "Manufacturing",
-    "summary": "Send confirmed sale orders or manufacturing orders to OpenMES as work orders and sync "
-    "products, BOMs and stock with the OpenMES ERP API",
+    "summary": "Send Odoo sale orders or manufacturing orders to OpenMES as work orders and get status, "
+    "change requests, settlements and stock documents back",
     "author": "OpenMES Team",
-    "website": "https://github.com/Mes-Open/OpenMes",
+    "website": "https://getopenmes.com",
+    "maintainer": "OpenMES Team",
+    "support": "contact@getopenmes.com",
     "license": "LGPL-3",
     "depends": ["sale_management", "sale_stock", "mrp"],
     "data": [
@@ -25,6 +27,7 @@
         "views/openmes_webhook_event_views.xml",
         "views/openmes_menus.xml",
     ],
+    "images": ["static/description/main_screenshot.png"],
     "installable": True,
     "application": False,
 }

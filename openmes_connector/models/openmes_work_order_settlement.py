@@ -108,6 +108,16 @@ class OpenmesWorkOrder(models.Model):
         copy=False,
         help="Total cost divided by the produced quantity (0 when nothing was produced).",
     )
+    settlement_material_cost = fields.Float(
+        "Material Cost",
+        digits=(16, 4),
+        readonly=True,
+        copy=False,
+        help="Material cost from OpenMES. Never added to the manufacturing order cost: Odoo values the "
+        "components itself.",
+    )
+    settlement_labor_cost = fields.Float("Labour Cost", digits=(16, 4), readonly=True, copy=False)
+    settlement_additional_cost = fields.Float("Additional Costs", digits=(16, 4), readonly=True, copy=False)
     settlement_currency_code = fields.Char(
         "Cost Currency", size=3, readonly=True, copy=False, help="The currency code as OpenMES sent it."
     )
@@ -248,9 +258,20 @@ class OpenmesWorkOrder(models.Model):
             if code
             else self.env["res.currency"]
         )
+        sections = {}
+        for key in ("materials", "labor", "additional"):
+            section = costs.get(key)
+            if section is None:
+                section = {}
+            if not isinstance(section, dict):
+                raise ValueError("unexpected cost section")
+            sections[key] = _number(section.get("total"))
         vals = {
             "scrap_qty": _number(scrap.get("total_qty")),
             "settlement_total_cost": _number(costs.get("total_cost")),
+            "settlement_material_cost": sections["materials"],
+            "settlement_labor_cost": sections["labor"],
+            "settlement_additional_cost": sections["additional"],
             "settlement_cost_per_unit": _number(costs.get("cost_per_unit")),
             "settlement_currency_code": code,
             "settlement_currency_id": currency.id or False,

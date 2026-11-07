@@ -74,6 +74,17 @@ class MrpProduction(models.Model):
                 )
             )
 
+    def button_mark_done(self):
+        res = super().button_mark_done()
+        # Closed (by OpenMES or by hand, e.g. a serial-tracked product): a
+        # "could not close" error of its finished work orders is obsolete.
+        stale = self.filtered(lambda p: p.state == "done").sudo().openmes_work_order_ids.filtered(
+            lambda w: w.mes_status == "DONE" and w.state == "sent" and w.last_error
+        )
+        if stale:
+            stale.last_error = False
+        return res
+
     def _action_cancel(self):
         res = super()._action_cancel()
         self.sudo().openmes_work_order_ids._openmes_queue_cancellation()

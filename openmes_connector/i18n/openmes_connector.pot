@@ -3122,3 +3122,160 @@ msgid ""
 "[%(warehouse)s] %(material)s / %(lot)s: the 0 was refused %(count)s times and is "
 "no longer sent; set the lot to 0 in OpenMES."
 msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Odoo could not create a lot for the finished product."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Odoo created lot %(lot)s for the finished product %(product)s: OpenMES does not report lot numbers of finished products."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Finished product lot: %(lot)s."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "OpenMES: close the manufacturing order manually"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "OpenMES finished work order %(order)s with %(qty)s %(uom)s produced. %(product)s is tracked by serial numbers, so Odoo did not close manufacturing order %(production)s: assign the serial numbers and mark it as done."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "The manufacturing order was not closed: serial-tracked products must be closed manually (OpenMES does not report serial numbers). OpenMES produced %(qty)s %(uom)s in work order %(order)s."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__production_lot_name
+msgid "Finished Product Lot"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__production_lot_name
+msgid "Lot of the finished product on the manufacturing order. Odoo creates it when it closes the order after OpenMES, unless one was set by hand."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__serial_activity_scheduled
+msgid "Manual Close Activity Created"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "OpenMES labour and additional costs were not added to the manufacturing order cost: %(reason)s"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "OpenMES work order %(order)s is not finished yet."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "several OpenMES work orders (%(orders)s) are finished for this manufacturing order."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "the settlement of OpenMES work order %(order)s could not be fetched (%(error)s). The manufacturing order was closed without them."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "unknown error"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "OpenMES summed costs in several currencies without conversion."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "the settlement is in %(currency)s, the company currency is %(company_currency)s. Amounts are never converted."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "no currency"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "OpenMES labour (%(labor)s %(currency)s) and additional costs (%(additional)s %(currency)s) of work order %(order)s were added to the manufacturing order cost: %(unit)s %(currency)s per unit (Extra Unit Cost). Material costs from OpenMES are not added: Odoo values the components itself."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production_openmes_cost.py:0
+msgid "It replaces the previous Extra Unit Cost of %(old)s."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_mo_extra_cost
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_mo_extra_cost
+msgid "Add OpenMES labour and additional costs to the manufacturing order cost"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_mo_extra_cost_available
+msgid "Manufacturing Cost Accounting Installed"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_material_cost
+msgid "Material Cost"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__settlement_material_cost
+msgid "Material cost from OpenMES. Never added to the manufacturing order cost: Odoo values the components itself."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_labor_cost
+msgid "Labour Cost"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_additional_cost
+msgid "Additional Costs"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "OpenMES costs in the manufacturing order cost"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Manufacturing orders mode only. When an MO is closed, Odoo uses the OpenMES settlement (fetched then if needed) and sets the MO's Extra Unit Cost to (labour + additional costs) / produced quantity. Material costs are not added: Odoo values the components itself."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Requires the Manufacturing cost accounting module (mrp_account); without it this option does nothing."
+msgstr ""

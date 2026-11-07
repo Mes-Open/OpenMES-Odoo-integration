@@ -238,6 +238,30 @@ class TestMultiCompany(OpenmesCase):
         self.assertEqual(str(self.company_a.openmes_status_since), "2026-11-02 10:00:00")
         self.assertEqual(str(self.company_b.openmes_status_since), "2026-11-03 11:00:00")
 
+    def test_lot_of_finished_product_in_the_mo_company(self):
+        self._configure(self.company_b, order_source="manufacturing_orders")
+        loaf_b = self.env["product.product"].create({
+            "name": "Loaf B", "default_code": "LOAF-B", "openmes_manufacture": True, "is_storable": True,
+            "tracking": "lot", "company_id": self.company_b.id,
+        })
+        production = self.env["mrp.production"].with_company(self.company_b).create({
+            "product_id": loaf_b.id, "product_qty": 2, "company_id": self.company_b.id,
+        })
+        production.action_confirm()
+        work_order = production.openmes_work_order_ids
+        work_order.write({"state": "sent", "mes_status": "PENDING", "sent_date": "2026-11-01 08:00:00"})
+
+        def answer(call):
+            if call["company"] == "B" and call["path"].startswith("/production/completions"):
+                return page([{"order_no": work_order.name, "id": 3, "status": "DONE", "produced_qty": 2,
+                              "planned_qty": 2, "updated_at": "2026-11-03T10:00:00+00:00"}])
+            return None
+
+        with self.route(answer):
+            self.env["openmes.work.order"]._cron_openmes_pull_status()
+        self.assertEqual(production.state, "done", work_order.last_error)
+        self.assertEqual(production.lot_producing_id.company_id, self.company_b)
+
     def test_change_requests_and_settlement_per_company(self):
         wo_a = self._sent(self.company_a, change_request_id=11, change_request_type="CHANGE",
                           change_request_status="SUBMITTED")

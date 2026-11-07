@@ -94,6 +94,7 @@
                             <field name="source_type" readonly="1"/>
                             <field name="sale_order_id" invisible="not sale_order_id"/>
                             <field name="production_id" invisible="not production_id" groups="mrp.group_mrp_user"/>
+                            <field name="production_lot_name" invisible="not production_lot_name"/>
                             <field name="source_name" invisible="not production_id" groups="!mrp.group_mrp_user"/>
                             <field name="origin_sale_order_id" invisible="not origin_sale_order_id"/>
                             <field name="partner_id"/>
@@ -156,6 +157,21 @@
                                     <label for="settlement_total_cost"/>
                                     <div class="o_row">
                                         <field name="settlement_total_cost"/>
+                                        <field name="settlement_currency_code"/>
+                                    </div>
+                                    <label for="settlement_material_cost"/>
+                                    <div class="o_row">
+                                        <field name="settlement_material_cost"/>
+                                        <field name="settlement_currency_code"/>
+                                    </div>
+                                    <label for="settlement_labor_cost"/>
+                                    <div class="o_row">
+                                        <field name="settlement_labor_cost"/>
+                                        <field name="settlement_currency_code"/>
+                                    </div>
+                                    <label for="settlement_additional_cost"/>
+                                    <div class="o_row">
+                                        <field name="settlement_additional_cost"/>
                                         <field name="settlement_currency_code"/>
                                     </div>
                                     <label for="settlement_cost_per_unit"/>

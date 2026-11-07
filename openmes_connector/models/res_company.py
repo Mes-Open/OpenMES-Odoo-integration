@@ -91,6 +91,12 @@ class ResCompany(models.Model):
         default=SOURCE_SALE_LINES,
         groups="base.group_system",
     )
+    openmes_mo_extra_cost = fields.Boolean(
+        "Add OpenMES labour and additional costs to the manufacturing order cost",
+        default=False,
+        copy=False,
+        groups="base.group_system",
+    )
     openmes_webhook_id = fields.Integer("OpenMES Webhook ID", groups="base.group_system", copy=False)
     openmes_webhook_secret = fields.Char("OpenMES Webhook Secret", groups="base.group_system", copy=False)
     openmes_webhook_url = fields.Char("OpenMES Webhook URL", groups="base.group_system", copy=False)

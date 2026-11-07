@@ -13,6 +13,7 @@ from . import res_company
 from . import res_config_settings
 from . import sale_order
 from . import mrp_production
+from . import mrp_production_openmes_cost
 from . import stock_move
 from . import stock_warehouse
 from . import mrp_workcenter

@@ -78,6 +78,12 @@ class OpenmesWorkOrder(models.Model):
     production_id = fields.Many2one(
         "mrp.production", "Manufacturing Order", readonly=True, index=True, ondelete="cascade", copy=False
     )
+    production_lot_name = fields.Char(
+        "Finished Product Lot",
+        related="production_id.lot_producing_id.name",
+        help="Lot of the finished product on the manufacturing order. Odoo creates it when it "
+        "closes the order after OpenMES, unless one was set by hand.",
+    )
     production_state = fields.Selection(
         related="production_id.state",
         string="Manufacturing Order Status",
@@ -714,12 +720,20 @@ class OpenmesWorkOrder(models.Model):
                 record._post_on_source(message)
                 continue
             uom = production.product_uom_id
+            if production.product_id.tracking == "serial":
+                # OpenMES reports no serial numbers, and one per unit cannot be
+                # made up: a person assigns them and closes the MO in Odoo.
+                record._openmes_serial_left_open()
+                continue
             qty = record.product_id.uom_id._compute_quantity(record.produced_qty, uom, rounding_method="HALF-UP")
             under_produced = float_compare(qty, production.product_qty, precision_rounding=uom.rounding) < 0
             siblings = production.procurement_group_id.mrp_production_ids
             error = None
             try:
                 with self.env.cr.savepoint():
+                    if production.product_id.tracking == "lot" and not production.lot_producing_id:
+                        # Before qty_producing, so the finished move lines get the lot.
+                        record._openmes_generate_finished_lot(production)
                     production.qty_producing = qty
                     production._set_qty_producing()
                 with self.env.cr.savepoint():
@@ -778,10 +792,36 @@ class OpenmesWorkOrder(models.Model):
                     uom=uom.name,
                     order=record.name,
                 )
+            if production.lot_producing_id:
+                message += " " + _("Finished product lot: %(lot)s.", lot=production.lot_producing_id.name)
+                # The lot also belongs on the OpenMES work order (set by hand or by Odoo).
+                record.sudo().message_post(body=message)
             record._post_on_source(message)
             # Its stock documents waited for the close: book them now, so they
             # stop holding back the stock snapshot.
             self.env.ref("openmes_connector.ir_cron_openmes_stock_documents").sudo()._trigger()
+
+    def _openmes_generate_finished_lot(self, production):
+        """Give a lot-tracked MO a lot from Odoo's standard lot numbering.
+
+        OpenMES does not report lot numbers of finished products. The lot is
+        kept even if the close fails afterwards, so a retry reuses it.
+        """
+        self.ensure_one()
+        # Ignores the auto-print action it may return: nobody sees it in a cron.
+        production.action_generate_serial()
+        lot = production.lot_producing_id
+        if not lot:
+            raise UserError(_("Odoo could not create a lot for the finished product."))
+        message = _(
+            "Odoo created lot %(lot)s for the finished product %(product)s: OpenMES does not report "
+            "lot numbers of finished products.",
+            lot=lot.name,
+            product=production.product_id.display_name,
+        )
+        self._post_on_source(message)
+        self.sudo().message_post(body=message)
+        return lot
 
     def _openmes_apply_change_request(self, row):
         self.ensure_one()

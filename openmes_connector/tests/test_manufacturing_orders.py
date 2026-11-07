@@ -26,6 +26,34 @@ class TestManufacturingOrders(OpenmesCase):
             "bom_line_ids": [(0, 0, {"product_id": cls.flour.id, "product_qty": 1})],
         })
         cls.plain = cls.env["product.product"].create({"name": "Plain roll", "default_code": "ROLL-01", "is_storable": True})
+        # Tracked finished products, flour only: their components need no lots.
+        cls.loaf = cls.env["product.product"].create({
+            "name": "Loaf", "default_code": "LOAF-01", "is_storable": True, "openmes_manufacture": True,
+            "tracking": "lot",
+        })
+        cls.cake = cls.env["product.product"].create({
+            "name": "Cake", "default_code": "CAKE-01", "is_storable": True, "openmes_manufacture": True,
+            "tracking": "serial",
+        })
+        for product in (cls.loaf, cls.cake):
+            cls.env["mrp.bom"].create({
+                "product_tmpl_id": product.product_tmpl_id.id,
+                "product_qty": 1,
+                "bom_line_ids": [(0, 0, {"product_id": cls.flour.id, "product_qty": 1})],
+            })
+        # Lot-tracked, with the lot-tracked yeast: its close fails until the yeast has a lot.
+        cls.seeded_loaf = cls.env["product.product"].create({
+            "name": "Seeded loaf", "default_code": "LOAF-02", "is_storable": True, "openmes_manufacture": True,
+            "tracking": "lot",
+        })
+        cls.env["mrp.bom"].create({
+            "product_tmpl_id": cls.seeded_loaf.product_tmpl_id.id,
+            "product_qty": 10,
+            "bom_line_ids": [
+                (0, 0, {"product_id": cls.flour.id, "product_qty": 5}),
+                (0, 0, {"product_id": cls.yeast.id, "product_qty": 100, "product_uom_id": cls.uom_gram.id}),
+            ],
+        })
         cls.env["mrp.bom"].create({
             "product_tmpl_id": cls.plain.product_tmpl_id.id,
             "product_qty": 1,
@@ -512,6 +540,239 @@ class TestManufacturingOrders(OpenmesCase):
         self.assertIn("server log", failing_wo.last_error)
         self.assertNotIn("internal detail", failing_wo.last_error)
         self.assertEqual(fine.state, "done")
+
+    # ── Lot and serial numbers of the finished product ───────────────────────
+
+    def _lots(self, product):
+        return self.env["stock.lot"].search([("product_id", "=", product.id)])
+
+    def _todos(self, production):
+        todo = self.env.ref("mail.mail_activity_data_todo")
+        return production.activity_ids.filtered(lambda a: a.activity_type_id == todo)
+
+    def test_done_lot_tracked_product_gets_new_lot(self):
+        production = self._create_mo(self.loaf, 10)
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order)
+        self._pull(self._done_row(work_order, 10))
+        self.assertEqual(production.state, "done")
+        self.assertFalse(work_order.last_error)
+        lot = production.lot_producing_id
+        self.assertTrue(lot)
+        # Standard Odoo: the lot follows the company of the product (shared here).
+        self.assertEqual((lot.product_id, lot.company_id), (self.loaf, self.loaf.company_id))
+        self.assertEqual(self._lots(self.loaf), lot)
+        finished = production.move_finished_ids.filtered(lambda m: m.product_id == self.loaf)
+        self.assertEqual(finished.move_line_ids.lot_id, lot, "the finished goods are booked on the lot")
+        messages = self._messages(production)
+        self.assertIn("Odoo created lot %s" % lot.name, messages)
+        self.assertIn("Finished product lot: %s." % lot.name, messages)
+        self.assertEqual(work_order.production_lot_name, lot.name)
+        self.assertIn(lot.name, self._messages(work_order))
+
+    def test_done_lot_tracked_uses_lot_set_by_hand(self):
+        production = self._create_mo(self.loaf, 10)
+        work_order = production.openmes_work_order_ids
+        manual = self.env["stock.lot"].create({"name": "L-MANUAL", "product_id": self.loaf.id})
+        production.lot_producing_id = manual
+        self._sent(work_order)
+        self._pull(self._done_row(work_order, 10))
+        self.assertEqual(production.state, "done")
+        self.assertEqual(production.lot_producing_id, manual)
+        self.assertEqual(self._lots(self.loaf), manual, "no other lot is created")
+        self.assertNotIn("Odoo created lot", self._messages(production))
+        self.assertIn("Finished product lot: L-MANUAL.", self._messages(production))
+        self.assertEqual(work_order.production_lot_name, "L-MANUAL")
+        self.assertIn("Finished product lot: L-MANUAL.", self._messages(work_order))
+
+    def test_done_under_produced_lot_creates_backorder(self):
+        production = self._create_mo(self.loaf, 10)
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order)
+        self._pull(self._done_row(work_order, 6))
+        self.assertEqual(production.state, "done")
+        self.assertEqual(production.qty_produced, 6)
+        first_lot = production.lot_producing_id
+        self.assertTrue(first_lot)
+        backorder = production.procurement_group_id.mrp_production_ids - production
+        self.assertEqual(len(backorder), 1)
+        self.assertEqual(backorder.product_qty, 4)
+        # Odoo 18 does not copy the lot to the backorder: it gets its own on its close.
+        self.assertFalse(backorder.lot_producing_id)
+        backorder_wo = backorder.openmes_work_order_ids
+        self.assertEqual(backorder_wo.state, "to_send")
+        self.assertIn("backorder", self._messages(production))
+
+        self._sent(backorder_wo, mes_id=78)
+        self._pull(self._done_row(backorder_wo, 4, id=78, updated_at="2026-11-03T09:00:00+00:00"))
+        self.assertEqual(backorder.state, "done")
+        self.assertFalse(backorder_wo.last_error)
+        self.assertTrue(backorder.lot_producing_id)
+        self.assertNotEqual(backorder.lot_producing_id, first_lot)
+        self.assertEqual(len(self._lots(self.loaf)), 2)
+
+    def _serial_mo(self, user=None):
+        production = self._create_mo(self.cake, 1)
+        if user:
+            production.user_id = user
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order)
+        return production, work_order
+
+    def test_done_serial_tracked_is_not_closed(self):
+        mrp_user = new_test_user(self.env, "om_mrp_user_serial", groups="mrp.group_mrp_user")
+        production, work_order = self._serial_mo(mrp_user)
+        qty_producing = production.qty_producing
+        before = self._document_cron_triggers()
+        self._pull(self._done_row(work_order, 1))
+        self.assertEqual(work_order.mes_status, "DONE")
+        self.assertNotEqual(production.state, "done")
+        self.assertEqual(production.qty_producing, qty_producing)
+        self.assertFalse(self._lots(self.cake))
+        self.assertIn("serial-tracked products must be closed manually", work_order.last_error)
+        self.assertIn("serial-tracked products must be closed manually", self._messages(production))
+        todos = self._todos(production)
+        self.assertEqual(len(todos), 1)
+        self.assertEqual(todos.user_id, mrp_user)
+        self.assertEqual(todos.summary, "OpenMES: close the manufacturing order manually")
+        self.assertIn("tracked by serial numbers", todos.note)
+        self.assertTrue(work_order.serial_activity_scheduled)
+        self.assertEqual(self._document_cron_triggers(), before)
+
+    def test_serial_retry_does_not_duplicate_activity(self):
+        mrp_user = new_test_user(self.env, "om_mrp_user_serial2", groups="mrp.group_mrp_user")
+        production, work_order = self._serial_mo(mrp_user)
+        self._pull(self._done_row(work_order, 1))
+        self.assertEqual(len(self._todos(production)), 1)
+        manager = new_test_user(self.env, "om_mrp_manager_serial", groups="mrp.group_mrp_manager")
+        action = work_order.with_user(manager).action_openmes_finish_production()
+        self.assertEqual(action["params"]["type"], "warning")
+        self.assertNotEqual(production.state, "done")
+        self.assertEqual(len(self._todos(production)), 1)
+        self._todos(production).action_feedback(feedback="later")
+        work_order.with_user(manager).action_openmes_finish_production()
+        self.assertFalse(self._todos(production), "no new activity once the first was done")
+        self.assertTrue(work_order.last_error)
+
+    def test_serial_closed_by_hand_clears_the_error(self):
+        mrp_user = new_test_user(self.env, "om_mrp_user_serial3", groups="mrp.group_mrp_user")
+        production, work_order = self._serial_mo(mrp_user)
+        other = self._create_mo(self.bun, 10)
+        other_wo = other.openmes_work_order_ids
+        other_wo.write({"state": "error", "last_error": "Cannot reach OpenMES"})
+        self._pull(self._done_row(work_order, 1))
+        self.assertTrue(work_order.last_error)
+        serial = self.env["stock.lot"].create({"name": "CAKE-SN-1", "product_id": self.cake.id})
+        manual = production.with_user(mrp_user)
+        manual.lot_producing_id = serial
+        manual.qty_producing = 1
+        manual._set_qty_producing()
+        manual.button_mark_done()
+        self.assertEqual(production.state, "done")
+        self.assertFalse(work_order.last_error, "the MO is closed: the error is obsolete")
+        self.assertEqual(other_wo.last_error, "Cannot reach OpenMES", "other work orders keep theirs")
+
+    def test_serial_without_responsible_logs_only(self):
+        production, work_order = self._serial_mo()
+        production.user_id = False
+        self._pull(self._done_row(work_order, 1))
+        self.assertNotEqual(production.state, "done")
+        self.assertIn("serial-tracked products must be closed manually", work_order.last_error)
+        self.assertFalse(self._todos(production))
+
+    def test_done_untracked_product_unchanged(self):
+        production = self._create_mo(self.bun, 10)
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order)
+        self._pull(self._done_row(work_order, 10))
+        self.assertEqual(production.state, "done")
+        self.assertFalse(production.lot_producing_id)
+        self.assertFalse(work_order.production_lot_name)
+        self.assertNotIn("lot", self._messages(production).lower())
+        self.assertFalse(work_order.serial_activity_scheduled)
+
+    def test_lot_kept_after_failed_close_and_reused_on_retry(self):
+        production = self._create_mo(self.seeded_loaf, 10)
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order)
+        self._pull(self._done_row(work_order, 10))
+        self.assertNotEqual(production.state, "done")
+        self.assertIn("could not mark the manufacturing order as done", work_order.last_error)
+        lot = production.lot_producing_id
+        self.assertTrue(lot, "the lot stays for the retry")
+        self.assertIn("Odoo created lot %s" % lot.name, self._messages(production))
+
+        yeast_lot = self.env["stock.lot"].create({"name": "YEAST-LOT-2", "product_id": self.yeast.id})
+        production.move_raw_ids.filtered(lambda m: m.product_id == self.yeast).move_line_ids.lot_id = yeast_lot
+        manager = new_test_user(self.env, "om_mrp_manager_lot", groups="mrp.group_mrp_manager")
+        action = work_order.with_user(manager).action_openmes_finish_production()
+        self.assertEqual(action["params"]["type"], "success")
+        self.assertEqual(production.state, "done")
+        self.assertEqual(production.lot_producing_id, lot)
+        self.assertEqual(self._lots(self.seeded_loaf), lot)
+
+    def test_lot_generation_error_is_reported(self):
+        failing = self._create_mo(self.loaf, 10)
+        fine = self._create_mo(self.bun, 10)
+        failing_wo, fine_wo = failing.openmes_work_order_ids, fine.openmes_work_order_ids
+        self._sent(failing_wo)
+        self._sent(fine_wo, mes_id=78)
+
+        def action_generate_serial(production):
+            raise UserError("No lot sequence")
+
+        with patch.object(type(failing), "action_generate_serial", action_generate_serial):
+            self._pull(self._done_row(failing_wo, 10), self._done_row(fine_wo, 10, id=78))
+        self.assertNotEqual(failing.state, "done")
+        self.assertFalse(failing.lot_producing_id)
+        self.assertIn("could not mark the manufacturing order as done", failing_wo.last_error)
+        self.assertIn("No lot sequence", failing_wo.last_error)
+        self.assertEqual(fine.state, "done", "the next row of the feed is still applied")
+
+    def test_lot_generation_without_a_lot_is_reported(self):
+        production = self._create_mo(self.loaf, 10)
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order)
+        with patch.object(type(production), "action_generate_serial", lambda productions: None):
+            self._pull(self._done_row(work_order, 10))
+        self.assertNotEqual(production.state, "done")
+        self.assertIn("could not create a lot", work_order.last_error)
+
+    def test_mrp_user_cannot_close_lot_tracked_mo(self):
+        production = self._create_mo(self.loaf, 10)
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order, mes_status="DONE", produced_qty=10)
+        mrp_user = new_test_user(self.env, "om_mrp_user_lot", groups="mrp.group_mrp_user")
+        with self.assertRaises(AccessError):
+            work_order.with_user(mrp_user).action_openmes_finish_production()
+        self.assertFalse(self._lots(self.loaf))
+        self.assertNotEqual(production.state, "done")
+
+    def test_salesman_reads_finished_lot_of_mto_work_order(self):
+        salesman = new_test_user(self.env, "om_salesman_lot", groups="sales_team.group_sale_salesman_all_leads")
+        order, production = self._mto_order(self.loaf, 3)
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order)
+        self._pull(self._done_row(work_order, 3))
+        self.assertEqual(production.state, "done")
+        values = work_order.with_user(salesman).read(["production_lot_name"])[0]
+        self.assertEqual(values["production_lot_name"], production.lot_producing_id.name)
+
+    def test_status_pull_errors_leave_lot_tracked_mo_untouched(self):
+        production = self._create_mo(self.loaf, 10)
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order)
+
+        def timeout(*args, **kwargs):
+            raise requests.Timeout("timed out")
+
+        for answer in (FakeResponse(500, None), timeout):
+            with self.mock_openmes(answer):
+                self.env["openmes.work.order"]._cron_openmes_pull_status()
+            self.assertEqual(work_order.mes_status, "IN_PROGRESS")
+            self.assertNotEqual(production.state, "done")
+            self.assertFalse(production.lot_producing_id)
+            self.assertFalse(self._lots(self.loaf))
 
     # ── Splits and closes done in Odoo ───────────────────────────────────────
 

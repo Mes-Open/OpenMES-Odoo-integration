@@ -2,11 +2,15 @@
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
             <h2 class="oe_slogan" style="color:#ef5a24;">OpenMES Connector</h2>
-            <h3 class="oe_slogan">Send production from Odoo to OpenMES and get the results back</h3>
+            <h3 class="oe_slogan">Send production from Odoo to the shop floor and get the results back</h3>
+        </div>
+        <div class="oe_span12">
             <p class="oe_mt32">
-                Connects Odoo 18 to OpenMES, the open-source manufacturing execution system,
-                through the OpenMES ERP integration API (<code>/api/v1/erp</code>). Every
-                company talks to its own OpenMES instance with its own API key.
+                Connects Odoo 18 to <a href="https://getopenmes.com">OpenMES</a>, the open-source
+                manufacturing execution system, through the OpenMES ERP integration API.
+                Confirmed sale orders or manufacturing orders become OpenMES work orders; status,
+                produced quantities, change requests, settlements and stock documents come back to
+                Odoo. Every Odoo company talks to its own OpenMES instance with its own API key.
             </p>
         </div>
     </div>
@@ -15,38 +19,24 @@
 <section class="oe_container oe_dark">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
-            <h3>Features</h3>
-            <ul>
-                <li><b>Work orders from sale orders or manufacturing orders</b>: confirming a
-                    sale order line or an MO of a product flagged <i>Manufacture in OpenMES</i>
-                    queues an OpenMES work order; a cron sends it, so confirming never waits on
-                    OpenMES.</li>
-                <li><b>Changes and cancellations</b>: quantity, date and cancellation changes are
-                    resent; once production has started they become change requests, and the
-                    approval or rejection comes back to Odoo.</li>
-                <li><b>Production feedback</b>: status, planned and produced quantity and
-                    completion time are pulled every 15 minutes and posted on the sale order
-                    or MO.</li>
-                <li><b>Webhooks</b>: register a signed webhook (HMAC-SHA256) in
-                    <i>Settings &gt; OpenMES</i> and OpenMES pushes work order changes, posted
-                    stock documents and quality issues at once; polling stays as a fallback.</li>
-                <li><b>Closing manufacturing orders</b>: a finished OpenMES work order marks its
-                    MO as done with the quantity produced, with a backorder for the rest.</li>
-                <li><b>Quantity differences</b>: a To-Do activity tells a person when OpenMES
-                    rejects a change or produces another quantity; Odoo never corrects
-                    documents on its own.</li>
-                <li><b>Settlement</b>: scrap, cost and material consumption of finished work
-                    orders are stored on the work order (information only).</li>
-                <li><b>Master data</b>: products, BoM components, routings and recipes are
-                    synchronised to OpenMES daily or on demand.</li>
-                <li><b>Work centers</b>: operations on a work center with an OpenMES
-                    workstation code are sent with that workstation and the product's line.</li>
-                <li><b>Stock</b>: on-hand quantities are pushed hourly per warehouse with an
-                    OpenMES warehouse code; OpenMES material issues and product receipts are
-                    booked in Odoo as stock moves and acknowledged.</li>
-                <li><b>Sync log</b>: every synchronisation run is logged with its counts and
-                    errors.</li>
-            </ul>
+            <h2 class="oe_slogan">Connect in a minute</h2>
+        </div>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                Enter the OpenMES URL and an API key in <b>Settings &gt; OpenMES</b> and click
+                <b>Test Connection</b>. Odoo asks OpenMES what the key may do and lists every
+                missing scope together with the features that will not work without it.
+            </p>
+            <p>
+                Production lines are read from OpenMES, so the default line and the line of a
+                product are picked from a list instead of typed. Choose whether work orders are
+                created from <b>sale order lines</b> or from <b>manufacturing orders</b>.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="openmes_settings.png" alt="Settings, OpenMES: successful connection test"/>
+            </div>
         </div>
     </div>
 </section>
@@ -54,17 +44,231 @@
 <section class="oe_container">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
-            <h3>Setup</h3>
-            <ol>
-                <li>Create an API key in OpenMES (<i>Settings &gt; API Keys</i>) with the ERP
-                    scopes listed in the module README.</li>
-                <li>In Odoo open <i>Settings &gt; OpenMES</i>, enter the OpenMES URL and the key,
-                    enable the integration and click <i>Test Connection</i>.</li>
-                <li>Refresh the production lines, flag the products to manufacture in OpenMES
-                    and, optionally, register the webhook.</li>
+            <h2 class="oe_slogan">Real-time updates with signed webhooks</h2>
+        </div>
+        <div class="oe_span6">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="openmes_webhook.png" alt="Settings, OpenMES: webhook registered"/>
+            </div>
+        </div>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                One click on <b>Register Webhook</b> and OpenMES pushes work order changes, progress,
+                posted stock documents and quality issues to Odoo. Every delivery is checked with an
+                HMAC-SHA256 signature and a timestamp; duplicates are answered and ignored.
+            </p>
+            <p>
+                Events are queued and applied one by one in the order they arrived, so OpenMES never
+                waits for Odoo. Failed events are retried and can be retried by hand. The status pull
+                stays as a fallback.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">From the sale order to the shop floor</h2>
+        </div>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                Confirming a sale order with a product flagged <i>Manufacture in OpenMES</i> queues
+                one OpenMES work order per line. A cron sends it right after the confirmation, so
+                confirming never waits on OpenMES or fails because of it.
+            </p>
+            <p>
+                The <b>OpenMES</b> smart button opens the work order with its state, OpenMES ID,
+                status and planned and produced quantities. Every change is posted on the sale order
+                chatter.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="openmes_sale_order.png" alt="Sale order with the OpenMES smart button"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Changes during production, approved on the shop floor</h2>
+        </div>
+        <div class="oe_span6">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="main_screenshot.png" alt="Work order with a change request waiting for approval"/>
+            </div>
+        </div>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                Changing the quantity or date of a confirmed order, or cancelling it, resends the
+                work order. Before production starts OpenMES applies it at once; once the order is
+                in production it becomes a <b>change request</b> that a manager approves or rejects
+                in OpenMES.
+            </p>
+            <p>
+                The work order shows the request and both quantities (here 60 planned in Odoo, 50 in
+                OpenMES). The decision comes back to Odoo. When OpenMES keeps or produces another
+                quantity, a person gets a To-Do activity: Odoo never corrects documents on its own.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Manufacturing orders closed from OpenMES</h2>
+        </div>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                In the <i>Manufacturing orders</i> mode, confirming an MO of a flagged product creates
+                its OpenMES work order; MTO, reordering rules and producing for stock all work.
+            </p>
+            <p>
+                When OpenMES reports the work order as done, Odoo marks the MO as done with the
+                quantity produced and creates a backorder for the rest, which gets its own OpenMES
+                work order. Lots of finished products are created with Odoo's numbering.
+                Optionally, OpenMES labour and additional costs are added to the MO cost.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="openmes_manufacturing_order.png" alt="Manufacturing order marked as done from OpenMES with a backorder"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Settlement of every finished order</h2>
+        </div>
+        <div class="oe_span6">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="openmes_settlement.png" alt="Settlement tab of a work order done in OpenMES"/>
+            </div>
+        </div>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                Once a work order is done in OpenMES, its settlement is fetched once and stored on
+                the work order: scrap, total cost and cost per unit, material, labour and additional
+                costs, and the material consumption with lots.
+            </p>
+            <p>
+                A summary is posted on the sale order or MO. The figures are information only,
+                unless you switch on the OpenMES costs in the manufacturing order cost.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Master data and stock, kept in step</h2>
+        </div>
+        <div class="oe_span6">
+            <ul class="oe_mt32">
+                <li><b>Products and BoMs</b>: flagged products become OpenMES product types, BoM
+                    components become materials and each BoM becomes a recipe.</li>
+                <li><b>Routings</b>: the BoM operations become the OpenMES routing; work centers with
+                    an OpenMES workstation code are sent with that workstation.</li>
+                <li><b>Stock</b>: on-hand quantities and lots of components are pushed hourly per
+                    warehouse with an OpenMES warehouse code.</li>
+                <li><b>Stock documents</b>: material issues and product receipts posted in OpenMES are
+                    booked in Odoo as stock moves and acknowledged, each exactly once.</li>
+                <li><b>Logs</b>: every synchronisation run and every webhook event is listed with its
+                    result.</li>
+            </ul>
+        </div>
+        <div class="oe_span6">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="openmes_routing.png" alt="Routing created in OpenMES from the Odoo BoM operations"/>
+            </div>
+        </div>
+        <div class="oe_span12">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="openmes_webhook_events.png" alt="List of OpenMES webhook events processed by Odoo"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Requirements</h2>
+            <ul class="oe_mt32">
+                <li><b>Odoo 18</b> (Community or Enterprise) with Sales, Inventory and Manufacturing.</li>
+                <li><b>OpenMES</b> with the ERP integration API enabled, and the <i>Warehouses</i>
+                    module for stock and stock documents. Use a current OpenMES version: it needs the
+                    change-request API, and the key scope report needs <code>GET /api/v1/erp/me</code>.</li>
+                <li>An OpenMES <b>API key</b> with the ERP scopes of the features you use.</li>
+                <li><b>Odoo.sh or on-premise.</b> Odoo Online does not allow third-party modules.
+                    For webhooks, OpenMES must be able to reach Odoo over the network (https in
+                    production).</li>
+                <li>No extra Python libraries.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Setup in 5 steps</h2>
+            <ol class="oe_mt32">
+                <li><b>OpenMES</b>: enable the ERP integration (and <i>Warehouses</i> for stock), then
+                    create an API key under <i>Settings &gt; API Keys</i> with the ERP scopes you need.</li>
+                <li><b>Connect</b>: in Odoo open <i>Settings &gt; OpenMES</i>, enter the OpenMES URL and
+                    the API key, click <i>Test Connection</i> and save.</li>
+                <li><b>Lines and mode</b>: click <i>Refresh Lines</i>, pick the default production line,
+                    set the work order prefix and choose <i>Sale order lines</i> or
+                    <i>Manufacturing orders</i>.</li>
+                <li><b>Products, warehouses, work centers</b>: give each product to manufacture an
+                    Internal Reference and tick <i>Manufacture in OpenMES</i>; set the OpenMES
+                    warehouse and workstation codes where they exist.</li>
+                <li><b>Go live</b>: enable the integration, run <i>Sync Products &amp; BoMs</i> once and,
+                    optionally, click <i>Register Webhook</i>.</li>
             </ol>
-            <p>Licence: LGPL-3. Source and documentation:
-                github.com/Mes-Open/OpenMes.</p>
+            <p>
+                The full guide (scopes, network requirements, multi-company, known limitations) is in
+                the module documentation.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Data sent to OpenMES</h2>
+            <p class="oe_mt32">
+                The module sends work orders (with the customer name and, for sale order lines, the
+                unit price), products, bills of materials, routings, stock quantities and lots
+                <b>only to the OpenMES URL you configure</b>, that is your own OpenMES instance.
+                Nothing is sent to the module authors or any other third party. The API key and the
+                webhook secret are stored per company, readable by administrators only, and never
+                written to the logs.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Support</h2>
+            <p class="oe_mt32" style="text-align:center;">
+                Questions, bug reports and feature requests: <b>contact@getopenmes.com</b><br/>
+                OpenMES: <a href="https://getopenmes.com">getopenmes.com</a> &middot;
+                Source code: <a href="https://github.com/Mes-Open">github.com/Mes-Open</a><br/>
+                Licence: LGPL-3. Maintained by the OpenMES Team.
+            </p>
         </div>
     </div>
 </section>
