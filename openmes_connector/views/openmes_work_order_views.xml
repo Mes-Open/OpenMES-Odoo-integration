@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_openmes_work_order_list" model="ir.ui.view">
+        <field name="name">openmes.work.order.list</field>
+        <field name="model">openmes.work.order</field>
+        <field name="arch" type="xml">
+            <list create="0" decoration-danger="state == 'error'" decoration-muted="state == 'cancelled'" decoration-success="mes_status == 'DONE' and not qty_discrepancy" decoration-warning="qty_discrepancy">
+                <field name="name"/>
+                <field name="source_type" widget="badge" optional="show"/>
+                <field name="source_name"/>
+                <field name="partner_id" optional="show"/>
+                <field name="product_id"/>
+                <field name="line_code" optional="show"/>
+                <field name="planned_qty"/>
+                <field name="mes_planned_qty" optional="hide"/>
+                <field name="produced_qty"/>
+                <field name="product_uom_id" optional="hide"/>
+                <field name="state" widget="badge" decoration-info="state == 'to_send'" decoration-success="state == 'sent'" decoration-danger="state == 'error'"/>
+                <field name="mes_status" widget="badge" optional="show"/>
+                <field name="change_request_status" widget="badge" optional="show"
+                       decoration-warning="change_request_status in ('DRAFT', 'SUBMITTED', 'APPROVED')"
+                       decoration-success="change_request_status == 'APPLIED'"
+                       decoration-danger="change_request_status == 'REJECTED'"/>
+                <field name="qty_discrepancy" widget="badge" optional="show" decoration-warning="qty_discrepancy"/>
+                <field name="sent_date" optional="hide"/>
+                <field name="completed_at" optional="show"/>
+                <field name="scrap_qty" optional="hide"/>
+                <field name="settlement_total_cost" optional="hide"/>
+                <field name="settlement_currency_code" optional="hide"/>
+                <field name="settlement_state" widget="badge" optional="hide"
+                       decoration-success="settlement_state == 'done'"
+                       decoration-info="settlement_state == 'pending'"
+                       decoration-danger="settlement_state == 'error'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_openmes_work_order_form" model="ir.ui.view">
+        <field name="name">openmes.work.order.form</field>
+        <field name="model">openmes.work.order</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="action_send" type="object" string="Send to OpenMES" class="btn-primary"
+                            invisible="state not in ('to_send', 'error') and not pending_cancel"
+                            groups="sales_team.group_sale_manager,mrp.group_mrp_manager"/>
+                    <button name="action_reset_to_send" type="object" string="Reset to Send"
+                            invisible="state not in ('error', 'cancelled')"
+                            groups="sales_team.group_sale_manager,mrp.group_mrp_manager"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state not in ('to_send', 'error')"
+                            groups="sales_team.group_sale_manager,mrp.group_mrp_manager"/>
+                    <button name="action_openmes_finish_production" type="object" string="Close Manufacturing Order"
+                            invisible="not production_id or mes_status != 'DONE' or production_state in ('done', 'cancel')"
+                            groups="mrp.group_mrp_manager"/>
+                    <button name="action_openmes_accept_quantity" type="object" string="Accept OpenMES Quantity"
+                            invisible="not qty_discrepancy"
+                            groups="sales_team.group_sale_manager,mrp.group_mrp_manager"
+                            confirm="Set the planned quantity in Odoo to the OpenMES quantity? Nothing is sent to OpenMES and the sale order or manufacturing order is not changed."/>
+                    <button name="action_openmes_fetch_settlement" type="object" string="Fetch Settlement"
+                            invisible="mes_status != 'DONE' or settlement_state == 'done'"
+                            groups="sales_team.group_sale_manager,mrp.group_mrp_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="to_send,sent"/>
+                </header>
+                <sheet>
+                    <field name="pending_cancel" invisible="1"/>
+                    <field name="source_type" invisible="1"/>
+                    <field name="production_state" invisible="1"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <div class="alert alert-danger" role="alert" invisible="not last_error">
+                        <field name="last_error"/>
+                    </div>
+                    <div class="alert alert-info" role="status" invisible="not pending_cancel or source_type != 'sale_line'">
+                        The sale order was cancelled. The cancellation is waiting to be sent to OpenMES.
+                    </div>
+                    <div class="alert alert-info" role="status" invisible="not pending_cancel or source_type != 'production'">
+                        The manufacturing order was cancelled. The cancellation is waiting to be sent to OpenMES.
+                    </div>
+                    <div class="alert alert-warning" role="status"
+                         invisible="change_request_status not in ('DRAFT', 'SUBMITTED', 'APPROVED')">
+                        A change request is waiting for a manager's decision in OpenMES.
+                    </div>
+                    <div class="alert alert-warning" role="status" invisible="qty_discrepancy != 'plan'">
+                        OpenMES plans a different quantity than Odoo. Adjust the order in Odoo, or accept the OpenMES quantity.
+                    </div>
+                    <div class="alert alert-warning" role="status" invisible="qty_discrepancy != 'production'">
+                        OpenMES produced a different quantity than planned in Odoo. Check the delivery and the invoice, then accept the OpenMES quantity.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="source_type" readonly="1"/>
+                            <field name="sale_order_id" invisible="not sale_order_id"/>
+                            <field name="production_id" invisible="not production_id" groups="mrp.group_mrp_user"/>
+                            <field name="source_name" invisible="not production_id" groups="!mrp.group_mrp_user"/>
+                            <field name="origin_sale_order_id" invisible="not origin_sale_order_id"/>
+                            <field name="partner_id"/>
+                            <field name="product_id"/>
+                            <field name="line_code" readonly="state not in ('to_send', 'error')"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="mes_status"/>
+                            <label for="planned_qty"/>
+                            <div class="o_row">
+                                <field name="planned_qty"/>
+                                <field name="product_uom_id"/>
+                            </div>
+                            <field name="mes_planned_qty"/>
+                            <field name="produced_qty"/>
+                            <field name="qty_discrepancy" invisible="not qty_discrepancy"/>
+                            <field name="mes_id" invisible="not mes_id"/>
+                            <field name="sent_date"/>
+                            <field name="completed_at"/>
+                            <field name="mes_updated_at"/>
+                            <field name="attempt_count"/>
+                        </group>
+                    </group>
+                    <group string="Change Request" invisible="not change_request_id">
+                        <group>
+                            <field name="change_request_type"/>
+                            <field name="change_request_status"/>
+                        </group>
+                        <group>
+                            <field name="change_request_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Settlement" name="settlement" invisible="mes_status != 'DONE'">
+                            <div class="alert alert-danger" role="alert" invisible="not settlement_error">
+                                <field name="settlement_error"/>
+                            </div>
+                            <div class="alert alert-info" role="status" invisible="settlement_state != 'pending'">
+                                The settlement is being fetched from OpenMES.
+                            </div>
+                            <div class="alert alert-info" role="status" invisible="settlement_state">
+                                No settlement was fetched for this work order. Use Fetch Settlement to get it from OpenMES.
+                            </div>
+                            <div class="alert alert-warning" role="status" invisible="not settlement_mixed_currency">
+                                Some costs are in other currencies; OpenMES summed them without conversion.
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="settlement_state"/>
+                                    <label for="scrap_qty"/>
+                                    <div class="o_row">
+                                        <field name="scrap_qty"/>
+                                        <field name="product_uom_id"/>
+                                    </div>
+                                    <field name="settlement_date"/>
+                                    <field name="settlement_attempts" invisible="not settlement_attempts"/>
+                                </group>
+                                <group>
+                                    <label for="settlement_total_cost"/>
+                                    <div class="o_row">
+                                        <field name="settlement_total_cost"/>
+                                        <field name="settlement_currency_code"/>
+                                    </div>
+                                    <label for="settlement_cost_per_unit"/>
+                                    <div class="o_row">
+                                        <field name="settlement_cost_per_unit"/>
+                                        <field name="settlement_currency_code"/>
+                                    </div>
+                                    <field name="settlement_currency_id" invisible="not settlement_currency_id"/>
+                                    <field name="settlement_mixed_currency" invisible="not settlement_mixed_currency"/>
+                                </group>
+                            </group>
+                            <field name="consumption_ids">
+                                <list create="0" delete="0" edit="0">
+                                    <field name="material_code"/>
+                                    <field name="material_name"/>
+                                    <field name="product_id" optional="show"/>
+                                    <field name="lot_numbers"/>
+                                    <field name="consumed_qty"/>
+                                    <field name="scrap_qty"/>
+                                    <field name="returned_qty" optional="show"/>
+                                    <field name="unit_of_measure"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_openmes_work_order_search" model="ir.ui.view">
+        <field name="name">openmes.work.order.search</field>
+        <field name="model">openmes.work.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="sale_order_id"/>
+                <field name="production_id" groups="mrp.group_mrp_user"/>
+                <field name="origin_sale_order_id"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="line_code"/>
+                <filter name="filter_source_sale" string="From Sale Orders" domain="[('source_type', '=', 'sale_line')]"/>
+                <filter name="filter_source_production" string="From Manufacturing Orders" domain="[('source_type', '=', 'production')]"/>
+                <separator/>
+                <filter name="filter_to_send" string="To Send" domain="[('state', '=', 'to_send')]"/>
+                <filter name="filter_error" string="Errors" domain="[('state', '=', 'error')]"/>
+                <filter name="filter_in_production" string="In Production"
+                        domain="[('state', '=', 'sent'), ('mes_status', 'not in', ('DONE', 'REJECTED', 'CANCELLED'))]"/>
+                <filter name="filter_done" string="Done" domain="[('mes_status', '=', 'DONE')]"/>
+                <filter name="filter_change_requests" string="Waiting for Approval"
+                        domain="[('change_request_status', 'in', ('DRAFT', 'SUBMITTED', 'APPROVED'))]"/>
+                <filter name="filter_settlement_error" string="Settlement Failed" domain="[('settlement_state', '=', 'error')]"/>
+                <filter name="filter_needs_attention" string="Needs Attention" domain="[('qty_discrepancy', '!=', False)]"/>
+                <group>
+                    <filter name="group_source_type" string="Source" context="{'group_by': 'source_type'}"/>
+                    <filter name="group_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_mes_status" string="OpenMES Status" context="{'group_by': 'mes_status'}"/>
+                    <filter name="group_line" string="Line" context="{'group_by': 'line_code'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_openmes_work_order" model="ir.actions.act_window">
+        <field name="name">OpenMES Work Orders</field>
+        <field name="res_model">openmes.work.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_openmes_work_order_search"/>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No OpenMES work orders yet</p>
+            <p>Mark a product as "Manufacture in OpenMES" and confirm a sale order or a manufacturing order with it (see Settings → OpenMES).</p>
+        </field>
+    </record>
+
+    <record id="action_server_openmes_send" model="ir.actions.server">
+        <field name="name">Send to OpenMES</field>
+        <field name="model_id" ref="model_openmes_work_order"/>
+        <field name="binding_model_id" ref="model_openmes_work_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_manager')), (4, ref('mrp.group_mrp_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_send()</field>
+    </record>
+</odoo>

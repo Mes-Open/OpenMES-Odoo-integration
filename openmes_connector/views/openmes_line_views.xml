@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_openmes_line_list" model="ir.ui.view">
+        <field name="name">openmes.line.list</field>
+        <field name="model">openmes.line</field>
+        <field name="arch" type="xml">
+            <list create="0" decoration-muted="not active">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="openmes_updated_at" optional="show"/>
+                <field name="last_refresh" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_openmes_line_form" model="ir.ui.view">
+        <field name="name">openmes.line.form</field>
+        <field name="model">openmes.line</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="openmes_updated_at"/>
+                            <field name="last_refresh"/>
+                        </group>
+                    </group>
+                    <field name="description" invisible="not description"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_openmes_line_search" model="ir.ui.view">
+        <field name="name">openmes.line.search</field>
+        <field name="model">openmes.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_openmes_line" model="ir.actions.act_window">
+        <field name="name">OpenMES Production Lines</field>
+        <field name="res_model">openmes.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No OpenMES lines yet</p>
+            <p>Use Settings → OpenMES → Refresh Lines to read the production lines from OpenMES.</p>
+        </field>
+    </record>
+</odoo>

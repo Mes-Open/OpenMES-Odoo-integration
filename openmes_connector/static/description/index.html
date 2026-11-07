@@ -1,0 +1,70 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan" style="color:#ef5a24;">OpenMES Connector</h2>
+            <h3 class="oe_slogan">Send production from Odoo to OpenMES and get the results back</h3>
+            <p class="oe_mt32">
+                Connects Odoo 18 to OpenMES, the open-source manufacturing execution system,
+                through the OpenMES ERP integration API (<code>/api/v1/erp</code>). Every
+                company talks to its own OpenMES instance with its own API key.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h3>Features</h3>
+            <ul>
+                <li><b>Work orders from sale orders or manufacturing orders</b>: confirming a
+                    sale order line or an MO of a product flagged <i>Manufacture in OpenMES</i>
+                    queues an OpenMES work order; a cron sends it, so confirming never waits on
+                    OpenMES.</li>
+                <li><b>Changes and cancellations</b>: quantity, date and cancellation changes are
+                    resent; once production has started they become change requests, and the
+                    approval or rejection comes back to Odoo.</li>
+                <li><b>Production feedback</b>: status, planned and produced quantity and
+                    completion time are pulled every 15 minutes and posted on the sale order
+                    or MO.</li>
+                <li><b>Webhooks</b>: register a signed webhook (HMAC-SHA256) in
+                    <i>Settings &gt; OpenMES</i> and OpenMES pushes work order changes, posted
+                    stock documents and quality issues at once; polling stays as a fallback.</li>
+                <li><b>Closing manufacturing orders</b>: a finished OpenMES work order marks its
+                    MO as done with the quantity produced, with a backorder for the rest.</li>
+                <li><b>Quantity differences</b>: a To-Do activity tells a person when OpenMES
+                    rejects a change or produces another quantity; Odoo never corrects
+                    documents on its own.</li>
+                <li><b>Settlement</b>: scrap, cost and material consumption of finished work
+                    orders are stored on the work order (information only).</li>
+                <li><b>Master data</b>: products, BoM components, routings and recipes are
+                    synchronised to OpenMES daily or on demand.</li>
+                <li><b>Work centers</b>: operations on a work center with an OpenMES
+                    workstation code are sent with that workstation and the product's line.</li>
+                <li><b>Stock</b>: on-hand quantities are pushed hourly per warehouse with an
+                    OpenMES warehouse code; OpenMES material issues and product receipts are
+                    booked in Odoo as stock moves and acknowledged.</li>
+                <li><b>Sync log</b>: every synchronisation run is logged with its counts and
+                    errors.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h3>Setup</h3>
+            <ol>
+                <li>Create an API key in OpenMES (<i>Settings &gt; API Keys</i>) with the ERP
+                    scopes listed in the module README.</li>
+                <li>In Odoo open <i>Settings &gt; OpenMES</i>, enter the OpenMES URL and the key,
+                    enable the integration and click <i>Test Connection</i>.</li>
+                <li>Refresh the production lines, flag the products to manufacture in OpenMES
+                    and, optionally, register the webhook.</li>
+            </ol>
+            <p>Licence: LGPL-3. Source and documentation:
+                github.com/Mes-Open/OpenMes.</p>
+        </div>
+    </div>
+</section>

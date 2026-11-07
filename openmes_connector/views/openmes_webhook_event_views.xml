@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_openmes_webhook_event_list" model="ir.ui.view">
+        <field name="name">openmes.webhook.event.list</field>
+        <field name="model">openmes.webhook.event</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" decoration-danger="state == 'error'" decoration-info="state == 'pending'"
+                  decoration-muted="result == 'ignored'">
+                <header>
+                    <button name="action_retry" type="object" string="Retry" groups="base.group_system"/>
+                </header>
+                <field name="received_at"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="event"/>
+                <field name="order_no"/>
+                <field name="delivery_id" optional="hide"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'"
+                       decoration-info="state == 'pending'" decoration-danger="state == 'error'"/>
+                <field name="result" optional="show"/>
+                <field name="attempt_count" optional="show"/>
+                <field name="last_error" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_openmes_webhook_event_form" model="ir.ui.view">
+        <field name="name">openmes.webhook.event.form</field>
+        <field name="model">openmes.webhook.event</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <header>
+                    <button name="action_retry" type="object" string="Retry" class="oe_highlight"
+                            invisible="state != 'error'" groups="base.group_system"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="event"/>
+                            <field name="order_no"/>
+                            <field name="delivery_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="received_at"/>
+                            <field name="processed_at"/>
+                            <field name="result"/>
+                            <field name="attempt_count"/>
+                            <field name="next_attempt_at" invisible="not next_attempt_at"/>
+                        </group>
+                    </group>
+                    <field name="last_error" invisible="not last_error" class="text-danger"/>
+                    <notebook>
+                        <page string="Payload" name="payload">
+                            <field name="payload_text" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_openmes_webhook_event_search" model="ir.ui.view">
+        <field name="name">openmes.webhook.event.search</field>
+        <field name="model">openmes.webhook.event</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="order_no"/>
+                <field name="delivery_id"/>
+                <field name="event"/>
+                <filter string="Pending" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Errors" name="error" domain="[('state', '=', 'error')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Event" name="group_event" context="{'group_by': 'event'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_openmes_webhook_event" model="ir.actions.act_window">
+        <field name="name">OpenMES Webhook Events</field>
+        <field name="res_model">openmes.webhook.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_openmes_webhook_event_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No webhook events yet</p>
+            <p>Deliveries from OpenMES are stored here and applied in the order they arrived.</p>
+        </field>
+    </record>
+</odoo>

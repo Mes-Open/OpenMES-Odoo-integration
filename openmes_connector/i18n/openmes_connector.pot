@@ -1,0 +1,3124 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* openmes_connector
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20261102\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-07 20:53+0000\n"
+"PO-Revision-Date: 2026-11-07 20:53+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"%(count)s manufacturing order(s) could not be marked as done. See the error "
+"on each order."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"%(count)s stock document(s) are not acknowledged yet. See the message on "
+"each document."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"%(count)s stock document(s) could not be acknowledged. See the message on "
+"each document."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"%(count)s work order(s) are being updated right now; they are sent again "
+"within a minute."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"%(count)s work order(s) could not be sent. See the error on each order."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid "%(kind)s %(product)s skipped: no Internal Reference."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid ""
+"%(operation)s: %(created)s created, %(updated)s updated, %(skipped)s "
+"skipped, %(errors)s errors"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid ""
+"%(operation)s: %(fetched)s fetched, %(booked)s booked, %(acked)s "
+"acknowledged, %(errors)s errors"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid ""
+"%(operation)s: %(fetched)s fetched, %(created)s created, %(updated)s "
+"updated, %(deactivated)s deactivated, %(errors)s errors"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid ""
+"%(product)s: recipe skipped, components without Internal Reference: "
+"%(items)s"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid "%(product)s: recipe skipped, more than %(max)s components."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"<span class=\"badge text-bg-success me-2\" invisible=\"not openmes_webhook_registered\">Registered</span>\n"
+"                                    <span class=\"badge text-bg-warning me-2\" invisible=\"not openmes_webhook_incomplete\">Incomplete</span>\n"
+"                                    <span class=\"badge text-bg-secondary me-2\" invisible=\"openmes_webhook_registered or openmes_webhook_incomplete\">Not registered</span>"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_line.py:0
+msgid "?: invalid line row"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "A change request is waiting for a manager's decision in OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "A line has no material or product code."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "A stock document without a valid id was skipped (%s)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "A webhook is already registered."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "Accept OpenMES Quantity"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__mes_status__accepted
+msgid "Accepted"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_form
+msgid "Acknowledge Without Booking"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__state__acked
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_search
+msgid "Acknowledged"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__acked_at
+msgid "Acknowledged On"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"Acknowledged in OpenMES before Odoo booked it; nothing was booked in Odoo."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__handling__external
+msgid "Acknowledged outside Odoo"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__attempt_count
+msgid "Acknowledgement Attempts"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__ack_error
+msgid "Acknowledgement Error"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__active
+msgid "Active"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__settlement_total_cost
+msgid ""
+"Actual cost from OpenMES: materials, labour and additional costs. No machine"
+" cost."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"An OpenMES API key (Settings → API Keys) with the scopes erp:orders:import, "
+"erp:production:read, erp:masterdata:read, erp:masterdata:write, "
+"erp:stock:write and erp:stock:read (without erp:stock:read no stock snapshot"
+" is sent), plus erp:webhooks:manage for webhooks. Test Connection lists the "
+"scopes the key is missing. Use https:// in production."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.constraint,message:openmes_connector.constraint_openmes_line_code_uniq
+msgid "An OpenMES line with this code already exists in this company."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.constraint,message:openmes_connector.constraint_openmes_work_order_name_unique
+msgid "An OpenMES order number must be unique."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.constraint,message:openmes_connector.constraint_openmes_stock_document_mes_id_unique
+msgid "An OpenMES stock document can only be imported once per company."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.constraint,message:openmes_connector.constraint_openmes_webhook_event_delivery_id_unique
+msgid "An OpenMES webhook delivery is processed only once."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"An OpenMES work order needs exactly one source: a sale order or a "
+"manufacturing order."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_company.py:0
+msgid ""
+"Another company already uses this OpenMES URL and API key. Give each company"
+" its own API key."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Another run is booking the OpenMES stock documents right now; skipped."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"Another run is booking the OpenMES stock documents right now; try again in a"
+" minute."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/stock_warehouse.py:0
+msgid ""
+"Another warehouse of company %(company)s already has the OpenMES warehouse "
+"code “%(code)s”."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__change_request_status__applied
+msgid "Applied"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__change_request_status__approved
+msgid "Approved"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_line_form
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_line_search
+msgid "Archived"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__attempt_count
+msgid "Attempt Count"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__attempt_count
+msgid "Attempts"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__operation__boms
+msgid "Bills of Materials"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__mes_status__blocked
+msgid "Blocked"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Book OpenMES stock documents"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Book Stock Documents"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__state__booked
+msgid "Booked"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_search
+msgid "Booked, Not Acknowledged"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_stock_document__state
+msgid ""
+"Booked: the stock moves are done in Odoo, the acknowledgement to OpenMES is "
+"still to be sent. Acknowledged: OpenMES knows the document is booked."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__error_message
+msgid "Booking Error"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "Cancel"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__change_request_type__cancel
+msgid "Cancellation"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__pending_cancel
+msgid "Cancellation to Send"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__mes_status__cancelled
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid "Cannot reach OpenMES (%s)."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__change_request_type__change
+msgid "Change"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "Change Request"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__change_request_status
+msgid "Change Request Status"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__change_request_type
+msgid "Change Request Type"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__attention_change_request_id
+msgid "Change Request with Activity"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__mes_status__change_hold
+msgid "Change hold"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Changed in Odoo manufacturing order %(order)s."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Changed in Odoo sale order %(order)s."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__openmes_updated_at
+msgid "Changed in OpenMES"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "Close Manufacturing Order"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__code
+msgid "Code"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_stock_warehouse__openmes_code
+msgid ""
+"Code (or ERP code) of the matching warehouse in OpenMES. When set, on-hand "
+"quantities of manufactured products and their components are pushed to "
+"OpenMES as a stock snapshot."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_product_product__openmes_line_code
+#: model:ir.model.fields,help:openmes_connector.field_product_template__openmes_line_code
+msgid ""
+"Code of the OpenMES production line for this product. Leave empty to use the"
+" default line from Settings."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__line_code
+msgid "Code of the OpenMES production line the order is planned on."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__company_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__company_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__company_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__company_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__company_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__company_id
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_search
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_material_lot_sent__company_id
+msgid "Company"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Company %s has no production location."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__completed_at
+msgid "Completed At"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid "Component"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_product_product__openmes_manufacture
+#: model:ir.model.fields,help:openmes_connector.field_product_template__openmes_manufacture
+msgid ""
+"Confirming a sale order or a manufacturing order (see Settings → OpenMES) "
+"with this product creates a work order in OpenMES. The product's Internal "
+"Reference is used as the OpenMES product type code."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Connected as key “%(name)s” (OpenMES %(version)s)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Connected as key “%(name)s” (tenant %(tenant)s, OpenMES %(version)s)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Connected, but OpenMES did not describe the API key."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid ""
+"Connected. This OpenMES version cannot report the key's scopes (GET "
+"/api/v1/erp/me); update OpenMES to check them."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Connection"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__consumed_qty
+msgid "Consumed"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_currency_code
+msgid "Cost Currency"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_currency_id
+msgid "Cost Currency in Odoo"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_cost_per_unit
+msgid "Cost per Unit"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_order_source
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_order_source
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Create OpenMES work orders from"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"Create OpenMES work orders from confirmed sale orders or manufacturing "
+"orders and synchronise master data. Every setting here belongs to the "
+"current company: switch company to connect another plant to its own OpenMES "
+"instance."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__imported_count
+msgid "Created"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__create_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__create_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__create_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__create_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__create_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__create_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__create_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__create_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__create_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__create_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__create_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__create_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__partner_id
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "Customer"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__origin_sale_order_id
+msgid "Customer Sale Order"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_sync_log_form
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_sync_log_list
+msgid "Date"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_default_line_id
+msgid "Default Line"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_default_line_code
+msgid "Default Line Code"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_default_line_id
+msgid "Default OpenMES Line"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.product_template_form_view_openmes
+msgid "Default line from Settings"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Default production line"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__product_uom_id
+msgid "Default unit of measure used for all stock operations."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.actions.act_window,help:openmes_connector.action_openmes_webhook_event
+msgid ""
+"Deliveries from OpenMES are stored here and applied in the order they "
+"arrived."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__delivery_id
+msgid "Delivery ID"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__description
+msgid "Description"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__direction
+msgid "Direction"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__display_name
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__display_name
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__display_name
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__display_name
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__display_name
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__display_name
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__document_id
+msgid "Document"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__name
+msgid "Document No."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_webhook_event__state__done
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__mes_status__done
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_search
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "Done"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__change_request_status__draft
+msgid "Draft"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "ERP API"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_company.py:0
+msgid "Enter the OpenMES URL and API key before enabling the integration."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__state__error
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_webhook_event__state__error
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__settlement_state__error
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__state__error
+msgid "Error"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__error_count
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_search
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_search
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "Errors"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__event
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_search
+msgid "Event"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__state__failed
+msgid "Failed"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "Fetch Settlement"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__settlement_state__done
+msgid "Fetched"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "From Manufacturing Orders"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "From Sale Orders"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_search
+msgid "Group By"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__handling
+msgid "Handling"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__id
+msgid "ID"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__message_has_error
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__direction__in
+msgid "In"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "In Production"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__mes_status__in_progress
+msgid "In progress"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__invalid_quantity
+msgid "Invalid Quantity"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__mes_updated_at
+msgid "Last Change in OpenMES"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__last_error
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__last_error
+msgid "Last Error"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__last_refresh
+msgid "Last Refresh"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__write_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__write_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__write_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__write_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__write_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__write_uid
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__write_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__write_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__write_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__write_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__write_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__write_date
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "Line"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_line.py:0
+msgid ""
+"Line “%s” is the default OpenMES line in Settings; choose another default "
+"first."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__line_ids
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_form
+msgid "Lines"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__lot_number
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_material_lot_sent__lot_number
+msgid "Lot Number"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__lot_numbers
+msgid "Lots"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order_consumption__lot_numbers
+msgid ""
+"Lots picked for this material in OpenMES, with the picked quantity in "
+"brackets."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_product_product__openmes_manufacture
+#: model:ir.model.fields,field_description:openmes_connector.field_product_template__openmes_manufacture
+msgid "Manufacture in OpenMES"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.product_template_search_view_openmes
+msgid "Manufactured in OpenMES"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_mrp_production
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__production_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__production_id
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__source_type__production
+msgid "Manufacturing Order"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__production_state
+msgid "Manufacturing Order Status"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__handling__production
+msgid "Manufacturing order"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Manufacturing order %(order)s was cancelled in Odoo."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__res_company__openmes_order_source__manufacturing_orders
+msgid "Manufacturing orders"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Manufacturing orders marked as done."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production.py:0
+msgid ""
+"Manufacturing orders with OpenMES work orders that are still open in OpenMES"
+" cannot be deleted: %(orders)s. Wait until OpenMES confirms the "
+"cancellation."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.actions.act_window,help:openmes_connector.action_openmes_work_order
+msgid ""
+"Mark a product as \"Manufacture in OpenMES\" and confirm a sale order or a "
+"manufacturing order with it (see Settings → OpenMES)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"Marked as done with %(qty)s %(uom)s produced in OpenMES (work order "
+"%(order)s)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"Marked as done with %(qty)s %(uom)s produced in OpenMES (work order "
+"%(order)s); the rest is in backorder %(backorder)s."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Master Data"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__material_name
+msgid "Material"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__material_code
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__material_code
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_material_lot_sent__material_code
+msgid "Material Code"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__consumption_ids
+msgid "Material Consumption"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__document_type__material_issue
+msgid "Material Issue"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__document_type__material_receipt
+msgid "Material Return"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.actions.act_window,help:openmes_connector.action_openmes_stock_document
+msgid ""
+"Material issues and product receipts posted in OpenMES appear here when they"
+" are booked into Odoo."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"Material issues and product receipts posted in OpenMES are booked as stock "
+"moves every 15 minutes and acknowledged. A warehouse with unbooked documents"
+" gets no stock snapshot until they are booked."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__operation__materials
+msgid "Materials"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__message
+msgid "Message"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Missing scopes (these features will fail):"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_mixed_currency
+msgid "Mixed Currencies"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_line__name
+msgid "Name"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "Needs Attention"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__next_attempt_at
+msgid "Next Attempt"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"No OpenMES line code: set one on the product or a default line in Settings."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.actions.act_window,help:openmes_connector.action_openmes_line
+msgid "No OpenMES lines yet"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.actions.act_window,help:openmes_connector.action_openmes_stock_document
+msgid "No OpenMES stock documents"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_production.py:0
+msgid ""
+"No OpenMES work order was created: sale order line %(line)s already has one."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.actions.act_window,help:openmes_connector.action_openmes_work_order
+msgid "No OpenMES work orders yet"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid ""
+"No settlement was fetched for this work order. Use Fetch Settlement to get "
+"it from OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "No warehouse has an OpenMES warehouse code."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.actions.act_window,help:openmes_connector.action_openmes_webhook_event
+msgid "No webhook events yet"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "No webhook is registered."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_search
+msgid "Not Booked"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__handling__manual
+msgid "Not booked"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__notes
+msgid "Notes"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_webhook_event__result__ignored
+msgid "Nothing to do"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Nothing to synchronise."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__erp_reference
+msgid "Odoo Reference"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Odoo could not complete the stock moves."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Odoo could not mark the manufacturing order as done: %(error)s"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"Odoo has no signing secret for this webhook: unregister it, then register "
+"again."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid ""
+"Odoo has no signing secret for webhook %s: unregister it first, then "
+"register again."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_res_config_settings__openmes_webhook_incomplete
+msgid ""
+"Odoo knows a webhook id but not its signing secret: unregister it, then "
+"register again."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Odoo needs a manual confirmation to close it."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Only administrators can run OpenMES synchronisation."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_webhook.py:0
+msgid "Only an administrator can retry OpenMES webhook events."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"Only inventory or manufacturing managers can book or acknowledge OpenMES "
+"stock documents."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_settlement.py:0
+msgid ""
+"Only work orders done in OpenMES and not settled yet can fetch a settlement."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_root
+#: model_terms:ir.ui.view,arch_db:openmes_connector.mrp_production_form_view_openmes
+#: model_terms:ir.ui.view,arch_db:openmes_connector.product_template_form_view_openmes
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_order_form_openmes
+msgid "OpenMES"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_api_key
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_api_key
+msgid "OpenMES API Key"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__change_request_id
+msgid "OpenMES Change Request"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_cr_since
+msgid "OpenMES Change Request Pull Marker"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_client
+msgid "OpenMES ERP API client"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__mes_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__mes_id
+msgid "OpenMES ID"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_enabled
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_enabled
+msgid "OpenMES Integration"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_product_product__openmes_line_id
+#: model:ir.model.fields,field_description:openmes_connector.field_product_template__openmes_line_id
+msgid "OpenMES Line"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__line_code
+#: model:ir.model.fields,field_description:openmes_connector.field_product_product__openmes_line_code
+#: model:ir.model.fields,field_description:openmes_connector.field_product_template__openmes_line_code
+msgid "OpenMES Line Code"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__order_no
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__name
+msgid "OpenMES Order No."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_line
+msgid "OpenMES Production Line"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.act_window,name:openmes_connector.action_openmes_line
+msgid "OpenMES Production Lines"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__mes_status
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "OpenMES Status"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_status_since
+msgid "OpenMES Status Pull Marker"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_stock_document
+#: model:ir.model.fields,field_description:openmes_connector.field_stock_move__openmes_stock_document_id
+msgid "OpenMES Stock Document"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_stock_document_line
+msgid "OpenMES Stock Document Line"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.act_window,name:openmes_connector.action_openmes_stock_document
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_stock_documents_mrp
+msgid "OpenMES Stock Documents"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.act_window,name:openmes_connector.action_openmes_sync_log
+msgid "OpenMES Sync Log"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_sync_log
+msgid "OpenMES Synchronisation Log"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__mes_type
+msgid "OpenMES Type"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_api_url
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_api_url
+msgid "OpenMES URL"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__warehouse_code
+msgid "OpenMES Warehouse"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_stock_warehouse__openmes_code
+msgid "OpenMES Warehouse Code"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__warehouse_erp_code
+msgid "OpenMES Warehouse ERP Code"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_webhook_event
+msgid "OpenMES Webhook Event"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.act_window,name:openmes_connector.action_openmes_webhook_event
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_webhook_events_mrp
+msgid "OpenMES Webhook Events"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_webhook_id
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_webhook_id
+msgid "OpenMES Webhook ID"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_webhook
+msgid "OpenMES Webhook Receiver"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_webhook_secret
+msgid "OpenMES Webhook Secret"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_webhook_url
+msgid "OpenMES Webhook URL"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_work_order
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__work_order_no
+msgid "OpenMES Work Order"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_work_order_consumption
+msgid "OpenMES Work Order Material Consumption"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_company__openmes_order_prefix
+msgid "OpenMES Work Order Prefix"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.act_window,name:openmes_connector.action_openmes_work_order
+#: model:ir.model.fields,field_description:openmes_connector.field_mrp_production__openmes_work_order_ids
+#: model:ir.model.fields,field_description:openmes_connector.field_sale_order__openmes_work_order_ids
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_work_orders_mrp
+msgid "OpenMES Work Orders"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid ""
+"OpenMES answered with a redirect (HTTP %s). Check the URL (http vs https)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "OpenMES applied the cancellation of work order %(order)s."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "OpenMES applied the change of work order %(order)s."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "OpenMES approved the cancellation of work order %(order)s."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "OpenMES approved the change of work order %(order)s."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES connection failed"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "OpenMES did not cancel work order %(order)s: %(reason)s"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES did not report the key's scopes."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_settlement.py:0
+msgid ""
+"OpenMES did not return settlement data; update OpenMES to a version that "
+"supports it."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES did not return the webhook id and signing secret."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"OpenMES does not know this document (HTTP 404); it is not acknowledged "
+"automatically any more. Check the document in OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid ""
+"OpenMES endpoint not found. Check that the ERP integration module (and "
+"Warehouses, for stock) is enabled in OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"OpenMES finished work order %(order)s (%(qty)s %(uom)s produced), but Odoo "
+"could not mark the manufacturing order as done: %(error)s"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid ""
+"OpenMES finished work order %(order)s with %(produced)s %(uom)s instead of "
+"%(planned)s %(uom)s (%(diff)s %(uom)s). Check the delivery and the invoice."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"OpenMES finished work order %(order)s with nothing produced; the "
+"manufacturing order was left open."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "OpenMES integration"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid ""
+"OpenMES is not configured for company %s: set the API URL and API key in "
+"Settings."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_res_company__openmes_default_line_id
+msgid ""
+"OpenMES line used when a product has no line of its own in this company."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_res_config_settings__openmes_default_line_id
+msgid "OpenMES line used when a product has no line of its own."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"OpenMES line used when a product has no line of its own. The list is "
+"refreshed daily from OpenMES (scope erp:masterdata:read)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES lines"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES master data"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_sync
+msgid "OpenMES master data synchronisation"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_settlement.py:0
+msgid "OpenMES no longer reports the work order as done."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"OpenMES order numbers are built as PREFIX-SALEORDER-LINEID or PREFIX-MO-"
+"NAME."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__qty_discrepancy__plan
+msgid "OpenMES plans a different quantity"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid ""
+"OpenMES plans a different quantity than Odoo. Adjust the order in Odoo, or "
+"accept the OpenMES quantity."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__qty_discrepancy__production
+msgid "OpenMES produced a different quantity"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid ""
+"OpenMES produced a different quantity than planned in Odoo. Check the "
+"delivery and the invoice, then accept the OpenMES quantity."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_product_product__openmes_line_id
+#: model:ir.model.fields,help:openmes_connector.field_product_template__openmes_line_id
+msgid ""
+"OpenMES production line for this product. Leave empty to use the default "
+"line from Settings. The list is refreshed from OpenMES. A product shared by "
+"several companies uses this line only in the line's company; the other "
+"companies use their default line."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"OpenMES pushes work order changes, posted stock documents and quality issues"
+" to Odoo at once. OpenMES must be able to reach this address; polling stays "
+"as a fallback (every hour while a webhook is registered). Save settings "
+"before registering."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "OpenMES quantity accepted on %(count)s work order(s)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid "OpenMES rate limit exceeded; the operation will be retried later."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid "OpenMES refused the change in the order's current state."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "OpenMES rejected a cancellation"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "OpenMES rejected a change"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid "OpenMES rejected the API key (missing, inactive or expired)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid ""
+"OpenMES rejected the cancellation of work order %(order)s. Reason: "
+"%(reason)s. OpenMES keeps producing %(mes_qty)s %(uom)s although the order "
+"is cancelled in Odoo."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "OpenMES rejected the cancellation of work order %(order)s: %(reason)s"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid ""
+"OpenMES rejected the change of work order %(order)s (requested %(requested)s"
+" %(uom)s). Reason: %(reason)s. OpenMES keeps planning %(mes_qty)s %(uom)s. "
+"Adjust the order in Odoo or ask again."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "OpenMES rejected the change of work order %(order)s: %(reason)s"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid "OpenMES rejected the payload: %s"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_webhook.py:0
+msgid ""
+"OpenMES reported a quality issue on work order %(order)s: %(title)s (type: "
+"%(type)s, severity: %(severity)s, non-conforming quantity: %(qty)s)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_settlement.py:0
+msgid "OpenMES returned invalid settlement data."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES stock"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES stock documents"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"OpenMES stops sending events to Odoo and the status is polled every 15 "
+"minutes again. Continue?"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES webhook"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES webhook registration failed"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "OpenMES webhook removal failed"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "OpenMES webhooks"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_form
+msgid ""
+"OpenMES will treat this document as booked, but Odoo's stock does not "
+"change. Continue only if you booked it by hand."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"OpenMES work order %(order)s is already in production, so the change "
+"(planned %(qty)s %(uom)s) was sent as a change request. It applies once a "
+"manager approves it in OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"OpenMES work order %(order)s is in production, so its cancellation was sent "
+"as a change request. It is cancelled once a manager approves it."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"OpenMES work order %(order)s is now %(status)s (produced %(produced)s of "
+"%(planned)s %(uom)s)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "OpenMES work order %(order)s was cancelled."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.ir_cron_openmes_stock_documents_ir_actions_server
+msgid "OpenMES: book stock documents"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.ir_cron_openmes_settlements_ir_actions_server
+msgid "OpenMES: fetch work order settlements"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "OpenMES: over-production"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.ir_cron_openmes_webhook_events_ir_actions_server
+msgid "OpenMES: process webhook events"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.ir_cron_openmes_pull_status_ir_actions_server
+msgid "OpenMES: pull work order status"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.ir_cron_openmes_refresh_lines_ir_actions_server
+msgid "OpenMES: refresh production lines"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.ir_cron_openmes_send_ir_actions_server
+msgid "OpenMES: send work orders"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.ir_cron_openmes_sync_master_data_ir_actions_server
+msgid "OpenMES: sync products, materials and BoMs"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.ir_cron_openmes_sync_stock_ir_actions_server
+msgid "OpenMES: sync stock"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "OpenMES: under-production"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_mrp_production__openmes_work_order_count
+#: model:ir.model.fields,field_description:openmes_connector.field_sale_order__openmes_work_order_count
+msgid "Openmes Work Order Count"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__operation
+msgid "Operation"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid "Operation %s"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__direction__out
+msgid "Out"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__state__partial
+msgid "Partial"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__mes_status__paused
+msgid "Paused"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__payload_text
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_form
+msgid "Payload"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__state__pending
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_webhook_event__state__pending
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__mes_status__pending
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__settlement_state__pending
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_search
+msgid "Pending"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__planned_qty
+msgid "Planned Quantity"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__mes_planned_qty
+msgid "Planned in OpenMES"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Planned quantity must be at least 0.01."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid ""
+"Planned quantity of OpenMES work order %(order)s set to the OpenMES quantity"
+" %(new)s %(uom)s (was %(old)s %(uom)s). The sale order or manufacturing "
+"order was not changed."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__posted_at
+msgid "Posted"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_webhook_event__result__processed
+msgid "Processed"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__processed_at
+msgid "Processed At"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__produced_qty
+msgid "Produced Quantity"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+#: model:ir.model,name:openmes_connector.model_product_template
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__product_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__product_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__product_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_material_lot_sent__product_id
+msgid "Product"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/product_template.py:0
+msgid ""
+"Product %(product)s belongs to %(company)s, but OpenMES line %(line)s "
+"belongs to another company."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"Product %(product)s has no Internal Reference. It is sent to OpenMES as the "
+"product type code."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__document_type__product_issue
+msgid "Product Issue"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__document_type__product_receipt
+msgid "Product Receipt"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__product_type_code
+msgid "Product Type Code"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Product “%s” does not track inventory."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"Product “%s” is tracked by lot or serial number, but the line has none."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__done_activity_scheduled
+msgid "Production Difference Activity Created"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__operation__lines
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_lines
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Production Lines"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_line.py:0
+msgid "Production lines could not be read from OpenMES: %s"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__operation__products
+msgid "Products"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"Products, BoM components (as materials), recipes and stock of warehouses "
+"with an OpenMES code. Runs automatically; save settings before running it "
+"manually."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__quantity
+msgid "Quantity"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__qty_discrepancy
+msgid "Quantity Difference"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Quantity of “%s” must be greater than zero."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Quantity “%(qty)s” of “%(product)s” is not a number."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__payload
+msgid "Raw Payload"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__received_at
+msgid "Received At"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Refresh Lines"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Register Webhook"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__change_request_status__rejected
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__mes_status__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "Reset to Send"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__result
+msgid "Result"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.action_server_openmes_stock_document_retry
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_form
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_form
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_list
+msgid "Retry"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__returned_qty
+msgid "Returned"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__operation__routings
+msgid "Routings"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__sent_count
+msgid "Rows Sent"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__sale_line_id
+msgid "Sale Line"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__sale_order_id
+msgid "Sale Order"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__source_type__sale_line
+msgid "Sale Order Line"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Sale order %(order)s was cancelled in Odoo."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__res_company__openmes_order_source__sale_lines
+msgid "Sale order lines"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"Sale order lines: one work order per confirmed line. Manufacturing orders: "
+"one per confirmed MO (use with Manufacture / MTO routes and replenishment). "
+"Switching does not change existing work orders."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__scrap_qty
+msgid "Scrap"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__scrap_qty
+msgid "Scrapped"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.server,name:openmes_connector.action_server_openmes_send
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "Send to OpenMES"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__state__sent
+msgid "Sent"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__sent_date
+msgid "Sent Date"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_stock_document__erp_reference
+msgid "Sent to OpenMES with the acknowledgement."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Serial-tracked product “%s” must come with quantity 1 per line."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid ""
+"Set the planned quantity in Odoo to the OpenMES quantity? Nothing is sent to"
+" OpenMES and the sale order or manufacturing order is not changed."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Set web.base.url to the address OpenMES can reach Odoo at."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__qty_discrepancy
+msgid ""
+"Set when OpenMES plans a different quantity than Odoo once no change request"
+" is open any more, or when OpenMES finished with a different quantity than "
+"planned in Odoo."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.actions.act_window,name:openmes_connector.action_openmes_config
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_settings
+msgid "Settings"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_state
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "Settlement"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_attempts
+msgid "Settlement Attempts"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_error
+msgid "Settlement Error"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "Settlement Failed"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_date
+msgid "Settlement Fetched On"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_settlement.py:0
+msgid "Settlement fetched from OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_settlement.py:0
+msgid ""
+"Settlement of OpenMES work order %(order)s: scrap %(scrap)s %(uom)s, total "
+"cost %(total)s %(currency)s (%(unit)s %(currency)s per unit), %(count)s "
+"material(s) consumed."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Several Odoo warehouses have the OpenMES code “%s”."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Several products have the Internal Reference “%s”."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__skipped_count
+msgid "Skipped"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__settlement_mixed_currency
+msgid ""
+"Some cost items are in another currency; OpenMES summed them without "
+"conversion."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_settlement.py:0
+msgid "Some costs are in other currencies and were summed without conversion."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid ""
+"Some costs are in other currencies; OpenMES summed them without conversion."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__source_type
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "Source"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__source_name
+msgid "Source Document"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__state
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__state
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_webhook_event__state
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__state
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_search
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "State"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_webhook_event_search
+msgid "Status"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__production_state
+msgid "Status of the manufacturing order in Odoo."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__operation__stock
+msgid "Stock"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__operation__stock_documents
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_stock_documents
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Stock Documents"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__move_ids
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_form
+msgid "Stock Moves"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Stock document %s could not be read; see the server log."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"Stock document %s is booked or acknowledged and cannot be deleted: the "
+"record is what keeps OpenMES from having it booked in Odoo a second time."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Stock documents acknowledged without booking."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Stock documents booked and acknowledged."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Stock documents could not be read from OpenMES: %s"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"Stock documents of %(company)s could not be read from OpenMES: %(error)s"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__handling__moves
+msgid "Stock moves"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_stock_document__handling
+msgid ""
+"Stock moves: booked by this module. Manufacturing order: the MO already "
+"consumed the components and received the product, so nothing was booked "
+"twice. Not booked: acknowledged by a user without booking. Acknowledged "
+"outside Odoo: the document left the OpenMES backlog before Odoo booked it."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid ""
+"Stock snapshot not sent: the OpenMES stock documents could not be booked "
+"first, so unbooked consumption could be overwritten (%s). Check the scope "
+"erp:stock:read."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid ""
+"Stock snapshot of warehouse %(warehouse)s not sent: %(count)s OpenMES stock "
+"document(s) are not booked in Odoo yet (%(documents)s). Fix them under "
+"OpenMES > Stock Documents."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__state__success
+msgid "Success"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_sync_log
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Sync Log"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Sync Products & BoMs"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Sync Stock"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Synchronisation"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Test Connection"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.product_template_form_view_openmes
+msgid ""
+"The Internal Reference is used as the OpenMES product type code, and the\n"
+"                                components of this product's bill of materials are synchronised as materials."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__settlement_currency_id
+msgid ""
+"The Odoo currency with the OpenMES code; empty when Odoo has none. Amounts "
+"are never converted."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order_consumption__product_id
+msgid ""
+"The Odoo product whose Internal Reference equals the OpenMES material code, "
+"if exactly one does."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid "The OpenMES API key lacks the scope required for this operation."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_company.py:0
+msgid ""
+"The OpenMES API key must start with “%s” (Settings → API Keys in OpenMES)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid ""
+"The OpenMES URL must not contain credentials, a query string or a fragment."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid "The OpenMES URL must start with http:// or https:// and name a host."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_line.py:0
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"The OpenMES line code must be at most 100 characters, without leading or "
+"trailing spaces."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/stock_warehouse.py:0
+msgid ""
+"The OpenMES warehouse code must be at most 100 characters, without leading "
+"or trailing spaces."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_res_config_settings__openmes_webhook_url
+msgid ""
+"The address OpenMES sends events to: the registered one, or web.base.url + "
+"/openmes/webhook."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid ""
+"The cancellation of OpenMES work orders %(orders)s is being sent to OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_line__company_id
+msgid "The company whose OpenMES instance has this line."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_stock_document__company_id
+msgid "The company whose OpenMES instance sent the document."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_sync_log__company_id
+msgid "The company whose OpenMES instance was synchronised."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__settlement_currency_code
+msgid "The currency code as OpenMES sent it."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "The document has no lines."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_stock_document__mes_type
+msgid "The document type exactly as OpenMES sent it."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_webhook.py:0
+msgid "The event carried invalid values."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "The key expires on %s."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "The key has every scope the module uses."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "The line of “%s” has no unit of measure."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid ""
+"The manufacturing order was cancelled. The cancellation is waiting to be "
+"sent to OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__planned_qty
+msgid ""
+"The quantity Odoo asks for. While a change request is open it can differ "
+"from the quantity OpenMES is producing."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__mes_planned_qty
+msgid "The quantity OpenMES is currently planned to produce."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_stock_document_line__invalid_quantity
+msgid "The quantity exactly as OpenMES sent it, when it was not a number."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__attention_change_request_id
+msgid ""
+"The rejected OpenMES change request an activity was already created for."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__origin_sale_order_id
+msgid "The sale order the manufacturing order was made for, if any."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid ""
+"The sale order was cancelled. The cancellation is waiting to be sent to "
+"OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_form
+msgid "The settlement is being fetched from OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_settlement.py:0
+msgid ""
+"The settlement of %(count)s work order(s) could not be fetched. See the "
+"error on each order."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__pending_cancel
+msgid ""
+"The source document was cancelled; the cancellation is waiting to be sent to"
+" OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order_consumption__unit_of_measure
+msgid "The unit of measure as OpenMES sent it; it is not converted."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_company.py:0
+msgid ""
+"The work order prefix may only contain letters, digits, “-” and “_” (max. 20"
+" characters)."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "These work orders have no quantity difference to accept."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__state__to_send
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "To Send"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__settlement_total_cost
+msgid "Total Cost"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__settlement_cost_per_unit
+msgid ""
+"Total cost divided by the produced quantity (0 when nothing was produced)."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__scrap_qty
+msgid ""
+"Total scrap reported in OpenMES, in the unit of measure of the work order's "
+"product."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__document_type
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_search
+msgid "Type"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Unexpected answer from OpenMES to the cancellation."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+#: code:addons/openmes_connector/models/openmes_webhook.py:0
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Unexpected error; see the server log."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_client.py:0
+msgid "Unexpected response from OpenMES (HTTP %s)."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document_line__unit_of_measure
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__unit_of_measure
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_material_lot_sent__unit_of_measure
+msgid "Unit"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__product_uom_id
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"Unit “%(unit)s” does not match the unit of “%(product)s” (%(uom)s); units "
+"are not converted."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Unknown OpenMES document type “%s”."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/product_template.py:0
+msgid ""
+"Unknown OpenMES line “%s”. Refresh the line list in Settings → OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"Unknown OpenMES warehouse “%s”: set it as the OpenMES Warehouse Code of an "
+"Odoo warehouse."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Unknown error"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid "Unknown product “%s”: no product has this Internal Reference."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Unregister Webhook"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_sync_log__updated_count
+msgid "Updated"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.actions.act_window,help:openmes_connector.action_openmes_line
+msgid ""
+"Use Settings → OpenMES → Refresh Lines to read the production lines from "
+"OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_work_order_search
+msgid "Waiting for Approval"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_stock_document__state__waiting_production
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_search
+msgid "Waiting for MO"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__change_request_status__submitted
+msgid "Waiting for approval"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+msgid ""
+"Waiting for manufacturing order %s to be marked as done; it books this "
+"consumption itself."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_stock_warehouse
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__warehouse_id
+#: model_terms:ir.ui.view,arch_db:openmes_connector.view_openmes_stock_document_search
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_material_lot_sent__warehouse_id
+msgid "Warehouse"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid ""
+"Warehouses module is disabled in OpenMES: stock snapshots and stock "
+"documents are unavailable."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Warehouses module: enabled."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_webhook_events
+msgid "Webhook Events"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_webhook_incomplete
+msgid "Webhook Incomplete"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_webhook_registered
+msgid "Webhook Registered"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_webhook_url
+msgid "Webhook URL"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_webhook_insecure
+msgid "Webhook URL Not HTTPS"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Webhook registered (id %(id)s) for %(url)s."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid ""
+"Webhook registered (id %(id)s) for %(url)s. The address is not https: events"
+" travel unencrypted. Use https in production."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "Webhook unregistered. Odoo polls OpenMES every 15 minutes again."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Webhooks"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__source_type
+msgid ""
+"What the work order was created from: a confirmed sale order line or a "
+"confirmed manufacturing order."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_webhook_event__result
+msgid ""
+"Whether the event changed anything in Odoo (e.g. an unknown order number "
+"changes nothing)."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__settlement_state
+msgid ""
+"Whether the settlement (consumption, scrap and cost) of the finished order "
+"was fetched from OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_work_order__change_request_status__cancelled
+msgid "Withdrawn"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_stock_document__work_order_id
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_work_order_consumption__work_order_id
+msgid "Work Order"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_res_config_settings__openmes_order_prefix
+msgid "Work Order Prefix"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.ui.menu,name:openmes_connector.menu_openmes_work_orders
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Work Orders"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "Work order number prefix"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+msgid "Work orders sent to OpenMES."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "https://mes.example.com"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_work_order.py:0
+#: code:addons/openmes_connector/models/openmes_work_order_attention.py:0
+msgid "no reason given"
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid "omk_…"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__name
+msgid ""
+"order_no of the work order in OpenMES. Unique and stable, so a repeated send"
+" never creates a duplicate."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "production line list"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "products, materials, material lots, BoMs and routings"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "registering webhooks"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "sending and cancelling work orders"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "status pull, change requests and settlement"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "stock documents and stock snapshot"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/res_config_settings.py:0
+msgid "stock snapshot and acknowledging stock documents"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_work_order__mes_updated_at
+msgid ""
+"updated_at of the newest OpenMES state applied. An older state (a late "
+"webhook or a re-read) never overwrites a newer one."
+msgstr ""
+
+#. module: openmes_connector
+#: model_terms:ir.ui.view,arch_db:openmes_connector.res_config_settings_view_form_openmes
+msgid ""
+"web.base.url is not https: webhook events would travel unencrypted. Use "
+"https in production."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_line.py:0
+#: code:addons/openmes_connector/models/openmes_stock_document.py:0
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid "… and %s more."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_mrp_workcenter__openmes_workstation_code
+msgid "OpenMES Workstation Code"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_mrp_workcenter__openmes_workstation_code
+msgid ""
+"Code of the matching OpenMES workstation. When set, BoM operations on this "
+"work center are sent to OpenMES with this workstation (and the product's "
+"OpenMES line) at the next master data sync."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_workcenter.py:0
+msgid ""
+"The OpenMES workstation code must be at most 50 characters, without leading "
+"or trailing spaces."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_workcenter.py:0
+msgid ""
+"Work center %(other)s (company %(company)s) already has the OpenMES "
+"workstation code “%(code)s”."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/mrp_workcenter.py:0
+msgid "all companies"
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid " (Odoo work center: %(names)s)"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_material_lot_sent__lot_id
+msgid "Lot"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model,name:openmes_connector.model_openmes_material_lot_sent
+msgid "OpenMES Material Lot Sent"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.constraint,message:openmes_connector.constraint_openmes_material_lot_sent_warehouse_lot_unique
+msgid "A lot is remembered once per warehouse."
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields.selection,name:openmes_connector.selection__openmes_sync_log__operation__material_lots
+msgid "Material lots"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,field_description:openmes_connector.field_openmes_material_lot_sent__zero_refusals
+msgid "Refused Zeros"
+msgstr ""
+
+#. module: openmes_connector
+#: model:ir.model.fields,help:openmes_connector.field_openmes_material_lot_sent__zero_refusals
+msgid "Runs in a row in which OpenMES refused this lot's 0."
+msgstr ""
+
+#. module: openmes_connector
+#. odoo-python
+#: code:addons/openmes_connector/models/openmes_sync.py:0
+msgid ""
+"[%(warehouse)s] %(material)s / %(lot)s: the 0 was refused %(count)s times and is "
+"no longer sent; set the lot to 0 in OpenMES."
+msgstr ""

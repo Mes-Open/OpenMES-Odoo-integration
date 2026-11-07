@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_openmes" model="ir.ui.view">
+        <field name="name">sale.order.form.openmes</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_openmes_work_orders" type="object" class="oe_stat_button" icon="fa-industry"
+                        invisible="openmes_work_order_count == 0">
+                    <field name="openmes_work_order_count" widget="statinfo" string="OpenMES"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

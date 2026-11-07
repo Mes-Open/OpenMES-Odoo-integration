@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_openmes_root" name="OpenMES" parent="sale.sale_menu_root" sequence="40"
+              groups="sales_team.group_sale_salesman"/>
+    <menuitem id="menu_openmes_work_orders" name="Work Orders" parent="menu_openmes_root"
+              action="action_openmes_work_order" sequence="10"/>
+    <menuitem id="menu_openmes_stock_documents" name="Stock Documents" parent="menu_openmes_root"
+              action="action_openmes_stock_document" sequence="15"
+              groups="stock.group_stock_user,mrp.group_mrp_user"/>
+    <menuitem id="menu_openmes_sync_log" name="Sync Log" parent="menu_openmes_root"
+              action="action_openmes_sync_log" sequence="20" groups="base.group_system"/>
+    <menuitem id="menu_openmes_webhook_events" name="Webhook Events" parent="menu_openmes_root"
+              action="action_openmes_webhook_event" sequence="22"
+              groups="base.group_system,sales_team.group_sale_manager"/>
+    <menuitem id="menu_openmes_lines" name="Production Lines" parent="menu_openmes_root"
+              action="action_openmes_line" sequence="25" groups="base.group_system"/>
+    <menuitem id="menu_openmes_settings" name="Settings" parent="menu_openmes_root"
+              action="action_openmes_config" sequence="30" groups="base.group_system"/>
+    <menuitem id="menu_openmes_work_orders_mrp" name="OpenMES Work Orders" parent="mrp.menu_mrp_manufacturing"
+              action="action_openmes_work_order" sequence="90"/>
+    <menuitem id="menu_openmes_stock_documents_mrp" name="OpenMES Stock Documents" parent="mrp.menu_mrp_manufacturing"
+              action="action_openmes_stock_document" sequence="91"
+              groups="stock.group_stock_user,mrp.group_mrp_user"/>
+    <menuitem id="menu_openmes_webhook_events_mrp" name="OpenMES Webhook Events" parent="mrp.menu_mrp_manufacturing"
+              action="action_openmes_webhook_event" sequence="92"
+              groups="base.group_system,mrp.group_mrp_manager"/>
+</odoo>

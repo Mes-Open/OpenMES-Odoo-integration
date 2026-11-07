@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_openmes" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.openmes</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="OpenMES" string="OpenMES" name="openmes_connector" groups="base.group_system">
+                    <block title="Connection" name="openmes_connection">
+                        <setting id="openmes_enabled" string="OpenMES integration" company_dependent="1"
+                                 help="Create OpenMES work orders from confirmed sale orders or manufacturing orders and synchronise master data. Every setting here belongs to the current company: switch company to connect another plant to its own OpenMES instance.">
+                            <field name="openmes_enabled"/>
+                        </setting>
+                        <setting id="openmes_api" string="ERP API"
+                                 company_dependent="1"
+                                 help="An OpenMES API key (Settings → API Keys) with the scopes erp:orders:import, erp:production:read, erp:masterdata:read, erp:masterdata:write, erp:stock:write and erp:stock:read (without erp:stock:read no stock snapshot is sent), plus erp:webhooks:manage for webhooks. Test Connection lists the scopes the key is missing. Use https:// in production.">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="openmes_api_url" class="col-lg-4 o_light_label"/>
+                                    <field name="openmes_api_url" widget="url" placeholder="https://mes.example.com" groups="base.group_system"/>
+                                </div>
+                                <div class="row">
+                                    <label for="openmes_api_key" class="col-lg-4 o_light_label"/>
+                                    <field name="openmes_api_key" password="True" placeholder="omk_…" groups="base.group_system"/>
+                                </div>
+                                <div class="mt8">
+                                    <button name="action_openmes_test_connection" type="object" string="Test Connection" icon="oi-arrow-right" class="btn-link"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Work Orders" name="openmes_work_orders">
+                        <setting id="openmes_order_source" string="Create OpenMES work orders from"
+                                 help="Sale order lines: one work order per confirmed line. Manufacturing orders: one per confirmed MO (use with Manufacture / MTO routes and replenishment). Switching does not change existing work orders.">
+                            <field name="openmes_order_source" widget="radio"/>
+                        </setting>
+                        <setting id="openmes_default_line" string="Default production line"
+                                 help="OpenMES line used when a product has no line of its own. The list is refreshed daily from OpenMES (scope erp:masterdata:read).">
+                            <field name="openmes_default_line_id" options="{'no_create': True}"/>
+                            <div class="mt8">
+                                <button name="action_openmes_refresh_lines" type="object" string="Refresh Lines" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                            <div>
+                                <button name="%(action_openmes_line)d" type="action" string="Production Lines" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                        </setting>
+                        <setting id="openmes_prefix" string="Work order number prefix"
+                                 help="OpenMES order numbers are built as PREFIX-SALEORDER-LINEID or PREFIX-MO-NAME.">
+                            <field name="openmes_order_prefix"/>
+                        </setting>
+                    </block>
+                    <block title="Master Data" name="openmes_master_data">
+                        <setting id="openmes_sync" string="Synchronisation"
+                                 help="Products, BoM components (as materials), recipes and stock of warehouses with an OpenMES code. Runs automatically; save settings before running it manually.">
+                            <div class="mt8">
+                                <button name="action_openmes_sync_master_data" type="object" string="Sync Products &amp; BoMs" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                            <div>
+                                <button name="action_openmes_sync_stock" type="object" string="Sync Stock" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                            <div>
+                                <button name="%(action_openmes_sync_log)d" type="action" string="Sync Log" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Webhooks" name="openmes_webhooks">
+                        <setting id="openmes_webhook" string="OpenMES webhooks"
+                                 help="OpenMES pushes work order changes, posted stock documents and quality issues to Odoo at once. OpenMES must be able to reach this address; polling stays as a fallback (every hour while a webhook is registered). Save settings before registering.">
+                            <field name="openmes_webhook_registered" invisible="1"/>
+                            <field name="openmes_webhook_incomplete" invisible="1"/>
+                            <div class="content-group">
+                                <div class="mt8">
+                                    <span class="badge text-bg-success me-2" invisible="not openmes_webhook_registered">Registered</span>
+                                    <span class="badge text-bg-warning me-2" invisible="not openmes_webhook_incomplete">Incomplete</span>
+                                    <span class="badge text-bg-secondary me-2" invisible="openmes_webhook_registered or openmes_webhook_incomplete">Not registered</span>
+                                    <span invisible="not openmes_webhook_id">
+                                        <label for="openmes_webhook_id" class="o_light_label me-1"/>
+                                        <field name="openmes_webhook_id" class="oe_inline" readonly="1"/>
+                                    </span>
+                                </div>
+                                <div class="text-muted" invisible="not openmes_webhook_incomplete">
+                                    Odoo has no signing secret for this webhook: unregister it, then register again.
+                                </div>
+                                <div class="mt8">
+                                    <field name="openmes_webhook_url" readonly="1"/>
+                                </div>
+                                <div class="alert alert-warning mt8 mb-0" role="alert" invisible="not openmes_webhook_insecure">
+                                    web.base.url is not https: webhook events would travel unencrypted. Use https in production.
+                                </div>
+                                <div class="mt8">
+                                    <button name="action_openmes_register_webhook" type="object" string="Register Webhook" icon="oi-arrow-right" class="btn-link" invisible="openmes_webhook_registered or openmes_webhook_incomplete"/>
+                                    <button name="action_openmes_unregister_webhook" type="object" string="Unregister Webhook" icon="oi-arrow-right" class="btn-link" invisible="not openmes_webhook_registered and not openmes_webhook_incomplete"
+                                            confirm="OpenMES stops sending events to Odoo and the status is polled every 15 minutes again. Continue?"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Stock Documents" name="openmes_stock_documents">
+                        <setting id="openmes_stock_documents" string="Book OpenMES stock documents"
+                                 help="Material issues and product receipts posted in OpenMES are booked as stock moves every 15 minutes and acknowledged. A warehouse with unbooked documents gets no stock snapshot until they are booked.">
+                            <div class="mt8">
+                                <button name="action_openmes_sync_stock_documents" type="object" string="Book Stock Documents" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                            <div>
+                                <button name="%(action_openmes_stock_document)d" type="action" string="Stock Documents" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_openmes_config" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'openmes_connector', 'bin_size': False}</field>
+    </record>
+</odoo>

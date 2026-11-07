@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_openmes_stock_document_list" model="ir.ui.view">
+        <field name="name">openmes.stock.document.list</field>
+        <field name="model">openmes.stock.document</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0" decoration-danger="state == 'error'" decoration-muted="state == 'acked'">
+                <field name="name"/>
+                <field name="document_type"/>
+                <field name="warehouse_id"/>
+                <field name="warehouse_code" optional="hide"/>
+                <field name="work_order_no"/>
+                <field name="production_id" optional="show" groups="mrp.group_mrp_user"/>
+                <field name="posted_at" optional="show"/>
+                <field name="erp_reference" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('pending', 'waiting_production')"
+                       decoration-warning="state == 'booked'"
+                       decoration-success="state == 'acked'"
+                       decoration-danger="state == 'error'"/>
+                <field name="error_message" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_openmes_stock_document_form" model="ir.ui.view">
+        <field name="name">openmes.stock.document.form</field>
+        <field name="model">openmes.stock.document</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <header>
+                    <button name="action_retry" type="object" string="Retry" class="btn-primary"
+                            invisible="state == 'acked'"
+                            groups="stock.group_stock_manager,mrp.group_mrp_manager"/>
+                    <button name="action_acknowledge_without_booking" type="object" string="Acknowledge Without Booking"
+                            invisible="state not in ('pending', 'waiting_production', 'error')"
+                            confirm="OpenMES will treat this document as booked, but Odoo's stock does not change. Continue only if you booked it by hand."
+                            groups="stock.group_stock_manager,mrp.group_mrp_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,booked,acked"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not error_message or state not in ('error', 'waiting_production')">
+                        <field name="error_message"/>
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="not ack_error or state != 'booked'">
+                        <field name="ack_error"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="document_type"/>
+                            <field name="mes_type" invisible="document_type"/>
+                            <field name="warehouse_id"/>
+                            <field name="warehouse_code"/>
+                            <field name="warehouse_erp_code"/>
+                            <field name="work_order_no"/>
+                            <field name="work_order_id" invisible="not work_order_id"/>
+                            <field name="production_id" invisible="not production_id" groups="mrp.group_mrp_user"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="posted_at"/>
+                            <field name="handling"/>
+                            <field name="erp_reference"/>
+                            <field name="acked_at"/>
+                            <field name="attempt_count"/>
+                            <field name="mes_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lines" name="lines">
+                            <field name="line_ids">
+                                <list>
+                                    <field name="material_code"/>
+                                    <field name="product_type_code"/>
+                                    <field name="product_id"/>
+                                    <field name="lot_number"/>
+                                    <field name="quantity"/>
+                                    <field name="invalid_quantity" optional="hide"/>
+                                    <field name="unit_of_measure"/>
+                                    <field name="notes" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Stock Moves" name="moves" invisible="not move_ids">
+                            <field name="move_ids">
+                                <list>
+                                    <field name="reference"/>
+                                    <field name="product_id"/>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_openmes_stock_document_search" model="ir.ui.view">
+        <field name="name">openmes.stock.document.search</field>
+        <field name="model">openmes.stock.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="work_order_no"/>
+                <field name="warehouse_id"/>
+                <field name="warehouse_code"/>
+                <field name="erp_reference"/>
+                <filter name="filter_not_booked" string="Not Booked"
+                        domain="[('state', 'in', ('pending', 'waiting_production', 'error'))]"/>
+                <filter name="filter_error" string="Errors" domain="[('state', '=', 'error')]"/>
+                <filter name="filter_waiting" string="Waiting for MO" domain="[('state', '=', 'waiting_production')]"/>
+                <filter name="filter_booked" string="Booked, Not Acknowledged" domain="[('state', '=', 'booked')]"/>
+                <filter name="filter_acked" string="Acknowledged" domain="[('state', '=', 'acked')]"/>
+                <group>
+                    <filter name="group_type" string="Type" context="{'group_by': 'document_type'}"/>
+                    <filter name="group_warehouse" string="Warehouse" context="{'group_by': 'warehouse_id'}"/>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_openmes_stock_document" model="ir.actions.act_window">
+        <field name="name">OpenMES Stock Documents</field>
+        <field name="res_model">openmes.stock.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_openmes_stock_document_search"/>
+        <field name="context">{'create': False, 'search_default_filter_not_booked': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No OpenMES stock documents</p>
+            <p>Material issues and product receipts posted in OpenMES appear here when they are booked into Odoo.</p>
+        </field>
+    </record>
+
+    <record id="action_server_openmes_stock_document_retry" model="ir.actions.server">
+        <field name="name">Retry</field>
+        <field name="model_id" ref="model_openmes_stock_document"/>
+        <field name="binding_model_id" ref="model_openmes_stock_document"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_manager')), (4, ref('mrp.group_mrp_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_retry()</field>
+    </record>
+</odoo>
