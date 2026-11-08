@@ -2,8 +2,12 @@
 OpenMES Connector
 =================
 
-Connects Odoo 18 to `OpenMES <https://github.com/Mes-Open/OpenMes>`_ through
+Connects Odoo 20 to `OpenMES <https://github.com/Mes-Open/OpenMes>`_ through
 the OpenMES ERP integration API (``/api/v1/erp``).
+
+Requirements: **Odoo 20.0** (Community or Enterprise) with Sales
+(``sale_management``), Inventory (``sale_stock``) and Manufacturing (``mrp``).
+This is the 20.0 branch of the module; Odoo 18.0 and 19.0 have their own branches.
 
 Features
 ========
@@ -98,7 +102,9 @@ Features
   hand on the MO before the close is used instead. The lot is kept even if
   the close then fails (e.g. a component lot is missing), so **Close
   Manufacturing Order** reuses it. A backorder gets its own lot when it is
-  closed. The work order form shows it as *Finished Product Lot*. Products
+  closed. The work order form shows it as *Finished Product Lot* (with
+  several lots or serial numbers on the MO, as Odoo 19 and later allow, all of them,
+  comma-separated). Products
   tracked by serial numbers are never closed automatically: the work order's
   last error and a message on the MO say so, and the MO's responsible (or the
   salesperson of the sale order) gets one To-Do to assign the serial numbers
@@ -114,7 +120,8 @@ Features
     planning or producing; one activity per change request, also after later
     pulls or after the activity was marked done;
   - when OpenMES finishes a work order with more or less than planned in Odoo
-    (compared after rounding to the product's unit, like Odoo does) — *check
+    (compared at the *Product Unit* decimal precision, which Odoo 19 and later
+    use for every unit of measure) — *check
     the delivery and the invoice*, with both quantities and the difference.
 
   The work order is flagged with a *Quantity Difference* (OpenMES plans a
@@ -144,7 +151,12 @@ Features
   version per change), their BoM components become materials, and each BoM
   becomes a recipe (quantity per one unit, ``replace`` mode). A product whose
   BoM has no operations gets a one-step default template, so its orders are
-  accepted right away. Runs daily, or from Settings.
+  accepted right away. Each step's run time per unit is the operation's
+  cycle time divided by the units one cycle makes, as Odoo 19 and later plan it: the
+  work center's *Product Capacities* row for the product or its unit, else the
+  BoM quantity (converted to the product's unit). Odoo 19 and 20 Community have no operation
+  description, so steps get no instruction unless a module adds the
+  operation ``note`` field back. Runs daily, or from Settings.
 * **Work centers → workstations**: an operation whose work center has an
   *OpenMES Workstation Code* is sent with that ``workstation_code`` and the
   ``line_code`` of the product's OpenMES line (or the default line), so the
@@ -456,8 +468,34 @@ acknowledgement failed; it is re-sent automatically up to five times, then
 only with **Retry**. **Settings > OpenMES > Book Stock Documents** runs the
 import at once.
 
+Upgrading from Odoo 19 to Odoo 20
+=================================
+
+Upgrade the database from Odoo 19 to 20 with Odoo's standard migration tool
+(the Odoo Upgrade service, or OpenUpgrade for Community), with the 19.0 module
+installed; then install this 20.0 module in place of the 19.0 one. The module
+has no cross-version migrations and the data model is the same: no field is
+added or removed and the unique constraints keep their names. Odoo 20 merges
+access rights and record rules into *Accesses* (``ir.access``): the module's
+access rights and multi-company rules keep their XML ids
+(``access_openmes_*``, ``openmes_*_company_rule``), so Odoo's migration
+replaces the old records in place.
+
+Upgrading from Odoo 18 to Odoo 19
+=================================
+
+The module has no cross-version migrations. Upgrade the database from Odoo
+18 to 19 with Odoo's standard migration tool (the Odoo Upgrade service, or
+OpenUpgrade for Community), with the 18.0 module installed at its latest
+version (18.0.1.1.15 or later); then install this 19.0 module in place of the
+18.0 one. The data model is the same: the unique constraints keep their
+names, and no field is added or removed. A new Odoo 19 database starts clean.
+
 Upgrading from 18.0.1.1.0
 =========================
+
+This section is about the 18.0 module and is kept for reference: upgrade to
+the latest 18.0 version first, then to Odoo 19 and Odoo 20 (above).
 
 Update the module (``-u openmes_connector``); the data migrations run on
 their own and keep every existing work order with its state, OpenMES id,
@@ -488,7 +526,7 @@ quantities, pending cancellation and change request. What changes:
   so an OpenMES retry across the upgrade is still answered as a duplicate.
 
 ``scripts/test_upgrade.sh`` in the repository checks all of this on a
-database created with 18.0.1.1.0.
+database created with 18.0.1.1.0 (it runs on Odoo 18.0 only).
 
 Known limitations
 =================
@@ -531,8 +569,9 @@ Known limitations
 * Stock documents: units are not converted — a line must be in the product's
   unit (spelling variants such as ``pcs``/``Units``/``szt`` or ``kg``/``KGM``
   are accepted); a line without a unit is an error. Quantities are rounded to
-  the precision of the product's unit (e.g. 1.2345 kg is booked as 1.235 kg
-  with the default 0.001 kg rounding), like everywhere else in Odoo. Issues
+  the *Product Unit* decimal precision that Odoo uses for every unit (e.g.
+  1.2345 kg is booked as 1.23 kg with the default 2 digits), like everywhere
+  else in Odoo. Issues
   are booked from the warehouse stock location without reservation and may
   drive on-hand stock negative.
 * Material lots: the expiry date is only read from ``product_expiry``; the
@@ -563,8 +602,7 @@ Known limitations
   OpenMES Quantity** on a sale order line work order, a later change of that
   line (even its description) resends the line's quantity and can open a new
   change request. Quantities are compared at the precision of the *Product
-  Unit of Measure* decimal setting when it is coarser than the unit's
-  rounding.
+  Unit* decimal setting (Odoo 20 units have no rounding of their own).
 * Manufacturing orders mode: work orders carry no unit price. Marking an MO
   done (or partly done) by hand in Odoo does not finish the OpenMES order.
   Finished products tracked by lots get a lot from Odoo, but OpenMES never

@@ -65,7 +65,7 @@ API_KEY_PREFIX = "omk_"
 DEFAULT_ORDER_PREFIX = "ODOO"
 REQUEST_TIMEOUT = 20
 EXPORT_PAGE_SIZE = 500
-USER_AGENT = "odoo-openmes-connector/18.0.1.1.8"
+USER_AGENT = "odoo-openmes-connector/20.0.1.0.0"
 
 # Scopes the module uses, in the order Test Connection lists them.
 REQUIRED_SCOPES = (
@@ -95,6 +95,12 @@ def validate_api_url(env, url):
     if parsed.username or parsed.password or parsed.query or parsed.fragment:
         return env._("The OpenMES URL must not contain credentials, a query string or a fragment.")
     return None
+
+
+def uom_rounding(env):
+    """Rounding step of quantities. Odoo 20 dropped ``uom.uom.rounding``: every
+    unit rounds to the "Product Unit" decimal precision."""
+    return 10 ** -env["decimal.precision"].precision_get("Product Unit")
 
 
 def parse_iso_datetime(value):

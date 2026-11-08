@@ -107,14 +107,14 @@ class TestMaterialLots(OpenmesCase):
         self.assertEqual(self._sent_keys(self.wh2), {("FLOUR-01", "F-2"), ("YEAST-01", "Y-1")})
 
     def test_untracked_material_sends_no_lots(self):
-        self.flour.tracking = "none"
+        self.flour.tracking = False  # Odoo 20: "none" is no longer a tracking value
         self.Quant._update_available_quantity(self.flour, self.wh1.lot_stock_id, 50)
         calls, logs = self._sync(import_report(updated=4), import_report(updated=4))
         self.assertEqual([self._path(c) for c in calls], ["/stock-documents", "/stock/import", "/stock/import"])
         self.assertFalse(logs.filtered(lambda l: l.operation == "material_lots"))
 
     def test_untracked_material_is_left_out_of_the_lots(self):
-        self.flour.tracking = "none"
+        self.flour.tracking = False  # Odoo 20: "none" is no longer a tracking value
         self.Quant._update_available_quantity(self.flour, self.wh1.lot_stock_id, 50)
         self._put(self.yeast, self.wh1.lot_stock_id, 3, self._lot(self.yeast, "Y-1"))
         calls, _logs = self._sync(import_report(updated=1), import_report(updated=4), import_report(updated=4))
@@ -194,7 +194,7 @@ class TestMaterialLots(OpenmesCase):
         lot = self._lot(self.flour, "L1")
         self._put(self.flour, self.wh1.lot_stock_id, 10, lot)
         self._sync(import_report(imported=1), import_report(updated=4), import_report(updated=4))
-        self.flour.tracking = "none"
+        self.flour.tracking = False  # Odoo 20: "none" is no longer a tracking value
         calls, _logs = self._sync(import_report(updated=1), import_report(updated=4), import_report(updated=4))
         self.assertEqual(calls[1]["json"]["lots"][0]["quantity_available"], 0)
 

@@ -16,7 +16,7 @@ from datetime import timedelta
 
 import psycopg2
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, modules
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_round
 
@@ -95,14 +95,11 @@ class OpenmesWebhookEvent(models.Model):
     received_at = fields.Datetime(required=True, readonly=True, default=fields.Datetime.now, index=True)
     processed_at = fields.Datetime(readonly=True)
 
-    _sql_constraints = [
-        # Same name as before: delivery ids are unique within one OpenMES instance.
-        (
-            "delivery_id_unique",
-            "unique(delivery_id, company_id)",
-            "An OpenMES webhook delivery is processed only once.",
-        ),
-    ]
+    # Same name as before: delivery ids are unique within one OpenMES instance.
+    _delivery_id_unique = models.Constraint(
+        "unique(delivery_id, company_id)",
+        "An OpenMES webhook delivery is processed only once.",
+    )
 
     @api.depends("payload")
     def _compute_payload_text(self):
@@ -171,7 +168,10 @@ class OpenmesWebhookEvent(models.Model):
         if retry_at:
             self._openmes_cron()._trigger(retry_at)
         remaining = self.sudo().search_count(self._openmes_due_domain()) if len(events) == EVENT_BATCH else 0
-        self.env["ir.cron"]._notify_progress(done=done, remaining=remaining)
+        # Each event is already committed on its own (above), so committing the
+        # progress too changes nothing; tests run in one transaction.
+        if not modules.module.current_test:
+            self.env["ir.cron"]._commit_progress(done, remaining=remaining)
 
     def _openmes_process(self):
         """Apply this event. Returns "transient" when it has to wait for

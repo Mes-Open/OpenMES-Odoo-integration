@@ -6,6 +6,8 @@ from odoo.tests.common import new_test_user
 
 from .common import API_URL, FakeResponse, OpenmesCase
 
+# Odoo 20: ir.config_parameter.get_param/set_param are gone; the typed
+# get_str/set_str replace them (same stored text, same False default).
 SECRET = "Zx8" + "s" * 37
 EVENTS = [
     "work_order.created",
@@ -22,7 +24,7 @@ class TestWebhookRegistration(OpenmesCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.icp = cls.env["ir.config_parameter"].sudo()
-        cls.icp.set_param("web.base.url", "https://odoo.example.test")
+        cls.icp.set_str("web.base.url", "https://odoo.example.test")
         cls.cron = cls.env.ref("openmes_connector.ir_cron_openmes_pull_status")
         cls.cron.write({"interval_number": 15, "interval_type": "minutes"})
 
@@ -69,11 +71,11 @@ class TestWebhookRegistration(OpenmesCase):
 
     def test_registered_url_stays_shown_when_base_url_changes(self):
         self._register_ok()
-        self.icp.set_param("web.base.url", "http://localhost:8069")
+        self.icp.set_str("web.base.url", "http://localhost:8069")
         self.assertEqual(self._settings().openmes_webhook_url, "https://odoo.example.test/openmes/webhook")
 
     def test_http_base_url_is_warned_about(self):
-        self.icp.set_param("web.base.url", "http://192.168.1.50:8069")
+        self.icp.set_str("web.base.url", "http://192.168.1.50:8069")
         self.assertTrue(self._settings().openmes_webhook_insecure)
         result, calls = self._register_ok()
         self.assertEqual(calls[0]["json"]["url"], "http://192.168.1.50:8069/openmes/webhook")
@@ -181,7 +183,7 @@ class TestWebhookSettingsStatus(OpenmesCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env["ir.config_parameter"].sudo().set_param("web.base.url", "https://odoo.example.test")
+        cls.env["ir.config_parameter"].sudo().set_str("web.base.url", "https://odoo.example.test")
         cls.company_b = cls.env["res.company"].create({"name": "OpenMES Company B"})
         cls.env.user.company_ids |= cls.company_b
         cls.Settings = cls.env["res.config.settings"]
@@ -282,7 +284,7 @@ class TestWebhookSettingsStatus(OpenmesCase):
             with self.subTest(case=name):
                 webhook_id, secret = state or (0, False)
                 self._set_webhook(webhook_id=webhook_id, secret=secret, url=WEBHOOK_URL if state else False)
-                icp.set_param("web.base.url", base)
+                icp.set_str("web.base.url", base)
                 settings = self.Settings.create({})
                 with self.mock_openmes(*responses):
                     result = getattr(settings, f"action_openmes_{method}_webhook")()

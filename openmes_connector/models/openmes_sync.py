@@ -65,7 +65,7 @@ class OpenmesSync(models.AbstractModel):
     @api.model
     def _bom_components(self, product, bom):
         """Return {component product: quantity per ONE unit of ``product``}."""
-        bom_qty = bom.product_uom_id._compute_quantity(bom.product_qty, product.uom_id, round=False)
+        bom_qty = bom.uom_id._compute_quantity(bom.product_qty, product.uom_id, round=False)
         components = OrderedDict()
         if not bom_qty:
             return components
@@ -73,7 +73,7 @@ class OpenmesSync(models.AbstractModel):
             if line._skip_bom_line(product):
                 continue
             component = line.product_id
-            qty = line.product_uom_id._compute_quantity(line.product_qty, component.uom_id, round=False)
+            qty = line.uom_id._compute_quantity(line.product_qty, component.uom_id, round=False)
             components[component] = components.get(component, 0.0) + qty / bom_qty
         return components
 
@@ -268,7 +268,11 @@ class OpenmesSync(models.AbstractModel):
             line_code = False
         steps = []
         for index, operation in enumerate(self._routing_operations(product, bom)[:MAX_ROUTING_STEPS], start=1):
-            capacity = operation.workcenter_id.default_capacity or 1.0
+            # Units made per cycle, as Odoo 19 and later plan it (mrp.routing.workcenter):
+            # the work center's capacity row for the product or its unit, else
+            # one cycle makes the whole BoM quantity. Converted to the product unit.
+            capacity = operation.workcenter_id._get_capacity(product, bom.uom_id, bom.product_qty or 1.0)[0]
+            capacity = bom.uom_id._compute_quantity(capacity, product.uom_id, round=False) or 1.0
             step = {
                 "step_number": index * 10,
                 "name": (operation.name or _("Operation %s", index))[:255],
@@ -277,8 +281,11 @@ class OpenmesSync(models.AbstractModel):
                     (operation.time_cycle_manual or 0.0) / capacity, precision_digits=4
                 ),
             }
-            if operation.note:
-                step["instruction"] = html2plaintext(operation.note)[:10000] or None
+            # Odoo 19 and 20 Community have no operation description ("note"); a module
+            # that adds it back (e.g. Enterprise) still gets it sent.
+            note = operation.note if "note" in operation._fields else False
+            if note:
+                step["instruction"] = html2plaintext(note)[:10000] or None
             # Without a code the planner picks the workstation in OpenMES.
             # A changed code changes the routing, so the next sync makes a
             # new version; an unchanged one is skipped by OpenMES.

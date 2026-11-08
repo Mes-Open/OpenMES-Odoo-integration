@@ -112,7 +112,7 @@ class ResConfigSettings(models.TransientModel):
             settings.openmes_mo_extra_cost_available = available
 
     def _openmes_webhook_target_url(self):
-        base = (self.env["ir.config_parameter"].sudo().get_param("web.base.url") or "").strip().rstrip("/")
+        base = (self.env["ir.config_parameter"].sudo().get_str("web.base.url") or "").strip().rstrip("/")
         return base + WEBHOOK_PATH
 
     @api.model_create_multi

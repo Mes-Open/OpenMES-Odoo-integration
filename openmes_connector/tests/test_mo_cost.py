@@ -38,7 +38,8 @@ class TestMoCost(OpenmesCase):
     def _mo(self, qty=10, product=None, uom=None):
         product = product or self.bun
         production = self.env["mrp.production"].create({
-            "product_id": product.id, "product_qty": qty, "product_uom_id": (uom or product.uom_id).id,
+            # Odoo 20: mrp.bom(.line), mrp.production and mrp.workcenter.capacity renamed product_uom_id to uom_id.
+            "product_id": product.id, "product_qty": qty, "uom_id": (uom or product.uom_id).id,
         })
         production.action_confirm()
         work_order = production.openmes_work_order_ids
@@ -140,17 +141,20 @@ class TestMoCost(OpenmesCase):
         production, work_order = self._mo()
         self._done(work_order, 10, self._body(work_order))
         self.assertEqual(production.state, "done")
-        components = sum(production.move_raw_ids.stock_valuation_layer_ids.mapped("value"))
+        # Odoo 19 values moves directly (stock.move.value).
+        # Odoo 20: component (outgoing) moves are valued negative; _cal_price takes abs().
+        components = abs(sum(production.move_raw_ids.mapped("value")))
+        self.assertTrue(components)
         finished = production.move_finished_ids.filtered(lambda m: m.product_id == self.bun)
-        value = sum(finished.stock_valuation_layer_ids.mapped("value"))
-        self.assertAlmostEqual(value, -components + LABOUR + ADDITIONAL, places=2)
+        value = sum(finished.mapped("value"))
+        self.assertAlmostEqual(value, components + LABOUR + ADDITIONAL, places=2)
 
     def test_under_produced_divides_by_the_closed_quantity(self):
         production, work_order = self._mo()
         self._done(work_order, 8, self._body(work_order, produced=8))
         self.assertEqual(production.state, "done")
         self.assertAlmostEqual(production.extra_cost, (LABOUR + ADDITIONAL) / 8)
-        backorder = production.procurement_group_id.mrp_production_ids - production
+        backorder = production._openmes_backorder_family() - production
         self.assertEqual(len(backorder), 1)
         self.assertEqual(backorder.extra_cost, 0)
 

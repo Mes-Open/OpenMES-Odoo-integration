@@ -14,6 +14,8 @@ from odoo.tests import tagged
 from .common import OpenmesCase
 
 
+# Odoo 20: ir.config_parameter.get_param/set_param are gone; the typed
+# get_str/set_str replace them (same stored text, same False default).
 def _load(version, name):
     path = os.path.join(get_module_path("openmes_connector"), "migrations", version, f"{name}.py")
     spec = importlib.util.spec_from_file_location(f"openmes_migration_{version.replace('.', '_')}_{name}", path)
@@ -47,7 +49,7 @@ class TestMigrationFrom110(OpenmesCase):
         cr.execute("UPDATE product_template SET openmes_line_code = 'M2' WHERE id = %s", (self.shared.id,))
         self.main.write({"openmes_enabled": False, "openmes_api_url": False, "openmes_api_key": False,
                          "openmes_default_line_id": False})
-        self.icp.set_param("openmes_connector.default_line_code", "MD")
+        self.icp.set_str("openmes_connector.default_line_code", "MD")
         self.env.ref("base.user_root").write({"company_ids": [(4, self.other.id)], "company_id": self.other.id})
         self.env.invalidate_all()
 
@@ -67,7 +69,7 @@ class TestMigrationFrom110(OpenmesCase):
         self.assertEqual(self.shared.openmes_line_id.code, "M2")
         self.assertEqual(self.main.openmes_default_line_id.code, "MD")
         self.assertEqual(Line.search_count([("code", "=", "MD")]), 1, "the 1.1.7 step reuses the line")
-        self.assertFalse(self.icp.get_param("openmes_connector.default_line_code"))
+        self.assertFalse(self.icp.get_str("openmes_connector.default_line_code", False))
 
     def test_fresh_install_does_nothing(self):
         self._legacy_database()
@@ -77,4 +79,4 @@ class TestMigrationFrom110(OpenmesCase):
             _load(version, name).migrate(self.env.cr, None)
         self.assertEqual(self.env["openmes.line"].with_context(active_test=False).search_count([]), before)
         self.assertFalse(self.mine.openmes_line_id)
-        self.assertEqual(self.icp.get_param("openmes_connector.default_line_code"), "MD")
+        self.assertEqual(self.icp.get_str("openmes_connector.default_line_code", False), "MD")

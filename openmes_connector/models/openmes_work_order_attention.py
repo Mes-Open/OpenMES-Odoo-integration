@@ -16,6 +16,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 
+from .openmes_client import uom_rounding
 from .openmes_work_order import CHANGE_REQUEST_OPEN
 
 _logger = logging.getLogger(__name__)
@@ -69,11 +70,11 @@ class OpenmesWorkOrder(models.Model):
         "state",
         "pending_cancel",
         "change_request_status",
-        "product_id.uom_id.rounding",
+        "product_id.uom_id",
     )
     def _compute_qty_discrepancy(self):
         for record in self:
-            rounding = record.product_id.uom_id.rounding or 0.01
+            rounding = uom_rounding(record.env)
             kind = False
             if (
                 record.state != "cancelled"
@@ -109,7 +110,7 @@ class OpenmesWorkOrder(models.Model):
             old = record.planned_qty
             new = record.produced_qty if record.qty_discrepancy == "production" else record.mes_planned_qty
             record.write({"planned_qty": new})
-            rounding = record.product_id.uom_id.rounding
+            rounding = uom_rounding(record.env)
             record._post_on_source(
                 _(
                     "Planned quantity of OpenMES work order %(order)s set to the OpenMES quantity "
@@ -176,7 +177,7 @@ class OpenmesWorkOrder(models.Model):
 
     def _openmes_rejection_texts(self, row):
         self.ensure_one()
-        rounding = self.product_id.uom_id.rounding
+        rounding = uom_rounding(self.env)
         uom = self.product_uom_id.name
         reason = row.get("rejection_reason") or self.env._("no reason given")
         mes_qty = _qty_str(self.mes_planned_qty or self.planned_qty, rounding)
@@ -212,7 +213,7 @@ class OpenmesWorkOrder(models.Model):
 
     def _openmes_production_texts(self):
         self.ensure_one()
-        rounding = self.product_id.uom_id.rounding
+        rounding = uom_rounding(self.env)
         diff = self.produced_qty - self.planned_qty
         over = diff > 0
         summary = (
@@ -238,7 +239,7 @@ class OpenmesWorkOrder(models.Model):
             "tracked by serial numbers, so Odoo did not close manufacturing order %(production)s: "
             "assign the serial numbers and mark it as done.",
             order=self.name,
-            qty=_qty_str(self.produced_qty, self.product_id.uom_id.rounding),
+            qty=_qty_str(self.produced_qty, uom_rounding(self.env)),
             uom=self.product_uom_id.name,
             product=production.product_id.display_name,
             production=production.name,
@@ -252,7 +253,7 @@ class OpenmesWorkOrder(models.Model):
             "The manufacturing order was not closed: serial-tracked products must be closed manually "
             "(OpenMES does not report serial numbers). OpenMES produced %(qty)s %(uom)s in work order "
             "%(order)s.",
-            qty=_qty_str(self.produced_qty, self.product_id.uom_id.rounding),
+            qty=_qty_str(self.produced_qty, uom_rounding(self.env)),
             uom=self.product_uom_id.name,
             order=self.name,
         )
@@ -290,7 +291,7 @@ class OpenmesWorkOrder(models.Model):
             and self.mes_status == "DONE"
             and not self.done_activity_scheduled
             and float_compare(
-                self.produced_qty, self.planned_qty, precision_rounding=self.product_id.uom_id.rounding or 0.01
+                self.produced_qty, self.planned_qty, precision_rounding=uom_rounding(self.env)
             )
         ):
             self.done_activity_scheduled = True

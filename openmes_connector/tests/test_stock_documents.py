@@ -87,7 +87,8 @@ class TestStockDocuments(OpenmesCase):
 
     def _mo_work_order(self, name="ODOO-WO-MO-1", qty=10):
         production = self.env["mrp.production"].create({
-            "product_id": self.bun.id, "product_qty": qty, "product_uom_id": self.bun.uom_id.id,
+            # Odoo 20: mrp.bom(.line), mrp.production and mrp.workcenter.capacity renamed product_uom_id to uom_id.
+            "product_id": self.bun.id, "product_qty": qty, "uom_id": self.bun.uom_id.id,
         })
         production.action_confirm()
         work_order = self.env["openmes.work.order"].create({
@@ -355,7 +356,7 @@ class TestStockDocuments(OpenmesCase):
         document = self._document(29)
         self.assertEqual(document.state, "error")
         self.env["product.product"].create({"name": "Nope", "default_code": "NOPE-01", "is_storable": True,
-                                            "uom_id": self.uom_kg.id, "uom_po_id": self.uom_kg.id})
+                                            "uom_id": self.uom_kg.id})
         # A malformed row: the backlog is incomplete, so nothing is given up.
         with self.mock_openmes(self._page(["junk"])):
             self._run()
@@ -445,7 +446,7 @@ class TestStockDocuments(OpenmesCase):
         self.assertEqual(self._document(28).state, "error")
         sugar = self.env["product.product"].create({
             "name": "Sugar", "default_code": "SUGAR-01", "is_storable": True,
-            "uom_id": self.uom_kg.id, "uom_po_id": self.uom_kg.id,
+            "uom_id": self.uom_kg.id,
         })
         with self.mock_openmes(self._page([doc]), self._ack()):
             self._run()
@@ -588,7 +589,7 @@ class TestStockDocuments(OpenmesCase):
     def _create_nope(self):
         return self.env["product.product"].create({
             "name": "Nope", "default_code": "NOPE-01", "is_storable": True,
-            "uom_id": self.uom_kg.id, "uom_po_id": self.uom_kg.id,
+            "uom_id": self.uom_kg.id,
         })
 
     def test_salesman_cannot_read(self):
@@ -616,7 +617,7 @@ class TestStockDocuments(OpenmesCase):
         document = self._error_document()
         self.env["product.product"].create({
             "name": "Nope", "default_code": "NOPE-01", "is_storable": True,
-            "uom_id": self.uom_kg.id, "uom_po_id": self.uom_kg.id,
+            "uom_id": self.uom_kg.id,
         })
         stock_manager = new_test_user(self.env, "sd_stock_mgr", groups="stock.group_stock_manager")
         mrp_manager = new_test_user(self.env, "sd_mrp_mgr", groups="mrp.group_mrp_manager")

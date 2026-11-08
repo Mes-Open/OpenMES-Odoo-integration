@@ -1,4 +1,6 @@
-from odoo import fields, models
+from odoo import api, fields, models
+
+from .openmes_stock_document import MOVE_REFERENCE
 
 
 class StockMove(models.Model):
@@ -12,6 +14,15 @@ class StockMove(models.Model):
         copy=False,
         ondelete="set null",
     )
+
+    @api.depends("openmes_stock_document_id.name")
+    def _compute_reference(self):
+        # Odoo 19 has no move name any more and gives a move outside a picking
+        # no reference: moves booked from an OpenMES document are named after it.
+        openmes = self.filtered("openmes_stock_document_id")
+        for move in openmes:
+            move.reference = MOVE_REFERENCE % move.openmes_stock_document_id.name
+        super(StockMove, self - openmes)._compute_reference()
 
     def write(self, vals):
         # An MO's deadline is computed from its finished moves, so a new

@@ -19,7 +19,7 @@ class TestQuantityAttention(OpenmesCase):
         cls.todo = cls.env.ref("mail.mail_activity_data_todo")
         cls.dough = cls.env["product.product"].create({
             "name": "Dough", "default_code": "DOUGH-01", "openmes_manufacture": True,
-            "uom_id": cls.uom_kg.id, "uom_po_id": cls.uom_kg.id,
+            "uom_id": cls.uom_kg.id,
         })
         cls.bun = cls.env["product.product"].create({
             "name": "Bun", "default_code": "BUN-01", "is_storable": True, "openmes_manufacture": True,
@@ -215,22 +215,22 @@ class TestQuantityAttention(OpenmesCase):
         self.assertEqual(other.qty_discrepancy, "production")
         self.assertIn("10.05 kg instead of 10 kg (+0.05 kg)", self._activities(other.sale_order_id).note)
 
-        # A unit rounded to whole crates: 24.4 crates is 24, 24.6 is 25.
+        # Odoo 19: every unit shares the "Product Unit" precision (0.01), a
+        # unit of its own (10 units per crate) no longer has its own rounding.
         crate = self.env["uom.uom"].create({
-            "name": "Crate", "category_id": self.uom_unit.category_id.id,
-            "uom_type": "bigger", "factor_inv": 10, "rounding": 1.0,
+            "name": "Crate", "relative_factor": 10, "relative_uom_id": self.uom_unit.id,
         })
         crates = self.env["product.product"].create({
             "name": "Crated rolls", "default_code": "CRATE-01", "openmes_manufacture": True,
-            "uom_id": crate.id, "uom_po_id": crate.id,
+            "uom_id": crate.id,
         })
         close = self._work_order(24, product=crates)
-        self._pull_status(self._page([self._done_row(close, 24.4)]))
-        self.assertEqual(close.produced_qty, 24.4)
+        self._pull_status(self._page([self._done_row(close, 24.004)]))
+        self.assertAlmostEqual(close.produced_qty, 24.0)
         self.assertFalse(self._activities(close.sale_order_id))
         self.assertFalse(close.qty_discrepancy)
         off = self._work_order(24, product=crates)
-        self._pull_status(self._page([self._done_row(off, 24.6)]))
+        self._pull_status(self._page([self._done_row(off, 24.01)]))
         self.assertEqual(len(self._activities(off.sale_order_id)), 1)
         self.assertEqual(off.qty_discrepancy, "production")
 
@@ -264,7 +264,8 @@ class TestQuantityAttention(OpenmesCase):
     def _mo_work_order(self, qty=10):
         self._configure(order_source="manufacturing_orders")
         production = self.env["mrp.production"].create({
-            "product_id": self.bun.id, "product_qty": qty, "product_uom_id": self.bun.uom_id.id,
+            # Odoo 20: mrp.bom(.line), mrp.production and mrp.workcenter.capacity renamed product_uom_id to uom_id.
+            "product_id": self.bun.id, "product_qty": qty, "uom_id": self.bun.uom_id.id,
             "user_id": self.mrp_user.id,
         })
         production.action_confirm()
@@ -286,7 +287,7 @@ class TestQuantityAttention(OpenmesCase):
         production, work_order = self._mo_work_order(10)
         self._pull_status(self._page([self._done_row(work_order, 6)]))
         self.assertEqual(production.state, "done")
-        backorder = production.procurement_group_id.mrp_production_ids - production
+        backorder = production._openmes_backorder_family() - production
         self.assertEqual(backorder.product_qty, 4)
         self.assertEqual(backorder.openmes_work_order_ids.planned_qty, 4)
         # The backorder carries the rest: no "check the delivery and the invoice".

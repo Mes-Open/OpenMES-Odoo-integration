@@ -1,0 +1,32 @@
+id,name,model_id,group_id/id,operation,domain
+access_openmes_work_order_salesman,openmes.work.order salesman,openmes.work.order,sales_team.group_sale_salesman,r,
+access_openmes_work_order_mrp_user,openmes.work.order mrp user,openmes.work.order,mrp.group_mrp_user,r,
+access_openmes_work_order_sale_manager,openmes.work.order sale manager,openmes.work.order,sales_team.group_sale_manager,ru,
+access_openmes_work_order_mrp_manager,openmes.work.order mrp manager,openmes.work.order,mrp.group_mrp_manager,ru,
+access_openmes_work_order_system,openmes.work.order system,openmes.work.order,base.group_system,crud,
+access_openmes_sync_log_system,openmes.sync.log system,openmes.sync.log,base.group_system,rd,
+access_openmes_stock_document_stock_user,openmes.stock.document stock user,openmes.stock.document,stock.group_stock_user,r,
+access_openmes_stock_document_mrp_user,openmes.stock.document mrp user,openmes.stock.document,mrp.group_mrp_user,r,
+access_openmes_stock_document_stock_manager,openmes.stock.document stock manager,openmes.stock.document,stock.group_stock_manager,r,
+access_openmes_stock_document_mrp_manager,openmes.stock.document mrp manager,openmes.stock.document,mrp.group_mrp_manager,r,
+access_openmes_stock_document_system,openmes.stock.document system,openmes.stock.document,base.group_system,crud,
+access_openmes_stock_document_line_stock_user,openmes.stock.document.line stock user,openmes.stock.document.line,stock.group_stock_user,r,
+access_openmes_stock_document_line_mrp_user,openmes.stock.document.line mrp user,openmes.stock.document.line,mrp.group_mrp_user,r,
+access_openmes_stock_document_line_system,openmes.stock.document.line system,openmes.stock.document.line,base.group_system,crud,
+access_openmes_webhook_event_sale_manager,openmes.webhook.event sale manager,openmes.webhook.event,sales_team.group_sale_manager,r,
+access_openmes_webhook_event_mrp_manager,openmes.webhook.event mrp manager,openmes.webhook.event,mrp.group_mrp_manager,r,
+access_openmes_webhook_event_system,openmes.webhook.event system,openmes.webhook.event,base.group_system,rud,
+access_openmes_line_user,openmes.line user,openmes.line,base.group_user,r,
+access_openmes_line_system,openmes.line system,openmes.line,base.group_system,crud,
+access_openmes_wo_consumption_salesman,openmes.work.order.consumption salesman,openmes.work.order.consumption,sales_team.group_sale_salesman,r,
+access_openmes_wo_consumption_mrp_user,openmes.work.order.consumption mrp user,openmes.work.order.consumption,mrp.group_mrp_user,r,
+access_openmes_wo_consumption_system,openmes.work.order.consumption system,openmes.work.order.consumption,base.group_system,crud,
+access_openmes_material_lot_sent_system,openmes.material.lot.sent system,openmes.material.lot.sent,base.group_system,r,
+openmes_work_order_company_rule,OpenMES work order: multi-company,openmes.work.order,,crud,"[('company_id', 'in', company_ids)]"
+openmes_work_order_consumption_company_rule,OpenMES work order consumption: multi-company,openmes.work.order.consumption,,crud,"[('company_id', 'in', company_ids)]"
+openmes_stock_document_company_rule,OpenMES stock document: multi-company,openmes.stock.document,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+openmes_stock_document_line_company_rule,OpenMES stock document line: multi-company,openmes.stock.document.line,,crud,"['|', ('document_id.company_id', '=', False), ('document_id.company_id', 'in', company_ids)]"
+openmes_line_company_rule,OpenMES line: multi-company,openmes.line,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+openmes_sync_log_company_rule,OpenMES sync log: multi-company,openmes.sync.log,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+openmes_webhook_event_company_rule,OpenMES webhook event: multi-company,openmes.webhook.event,,crud,"[('company_id', 'in', company_ids)]"
+openmes_material_lot_sent_company_rule,OpenMES material lot sent: multi-company,openmes.material.lot.sent,,crud,"[('company_id', 'in', company_ids)]"

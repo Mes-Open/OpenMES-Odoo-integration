@@ -1,12 +1,11 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
 
 from .openmes_client import DEFAULT_ORDER_PREFIX, SOURCE_MANUFACTURING
 from .openmes_work_order import MES_TERMINAL_STATUSES
 
 # MO fields whose change is sent to OpenMES (as planned_qty / due_date).
-TRACKED_FIELDS = {"product_qty", "product_uom_id", "date_deadline", "date_start", "date_finished"}
+TRACKED_FIELDS = {"product_qty", "uom_id", "date_deadline", "date_start", "date_finished"}
 
 
 class MrpProduction(models.Model):
@@ -85,8 +84,10 @@ class MrpProduction(models.Model):
             stale.last_error = False
         return res
 
-    def _action_cancel(self):
-        res = super()._action_cancel()
+    def action_cancel(self):
+        # Odoo 20 folded mrp.production._action_cancel into action_cancel; every
+        # cancel path (button, stock move cancellation, unlink) goes through it.
+        res = super().action_cancel()
         self.sudo().openmes_work_order_ids._openmes_queue_cancellation()
         return res
 
@@ -100,7 +101,7 @@ class MrpProduction(models.Model):
 
     def _openmes_planned_qty(self):
         self.ensure_one()
-        return self.product_uom_id._compute_quantity(self.product_qty, self.product_id.uom_id, round=False)
+        return self.uom_id._compute_quantity(self.product_qty, self.product_id.uom_id, round=False)
 
     def _openmes_due_date(self):
         self.ensure_one()
@@ -121,8 +122,7 @@ class MrpProduction(models.Model):
                 continue
             old_qty, old_due = before[production.id]
             new_qty, new_due = production._openmes_snapshot()
-            rounding = production.product_id.uom_id.rounding
-            if float_compare(old_qty, new_qty, precision_rounding=rounding) or old_due != new_due:
+            if production.product_id.uom_id.compare(old_qty, new_qty) or old_due != new_due:
                 production.openmes_work_order_ids._openmes_request_update({"planned_qty": new_qty})
 
     def _openmes_origin_sale_line(self):
@@ -134,11 +134,21 @@ class MrpProduction(models.Model):
             line = production.sale_line_id
         return line
 
+    def _openmes_backorder_family(self):
+        """The MO and all its backorders (Odoo 19 links them by production group)."""
+        self.ensure_one()
+        return self.production_group_id.production_ids
+
     def _openmes_origin_sale_order(self):
         """The sale order this MO was made for, if any."""
         self.ensure_one()
         production = self.sudo()
-        order = production._openmes_origin_sale_line().order_id or production.procurement_group_id.sale_id
+        order = production._openmes_origin_sale_line().order_id
+        if not order:
+            # Odoo 19 stock references can link an MO to several sale orders;
+            # only an unambiguous one counts (Odoo 18 had a single sale_id).
+            sale_orders = production.reference_ids.sale_ids
+            order = sale_orders if len(sale_orders) == 1 else order
         if not order and production.origin:
             # Last resort: "origin" is free text ("S00012", "S1, S2", an orderpoint…),
             # so only an exact match counts.
@@ -174,7 +184,7 @@ class MrpProduction(models.Model):
                 production in existing
                 or production.state not in ("confirmed", "progress", "to_close")
                 or not product.product_tmpl_id.openmes_manufacture
-                or float_compare(production.product_qty, 0.0, precision_rounding=production.product_uom_id.rounding) <= 0
+                or production.uom_id.compare(production.product_qty, 0.0) <= 0
             ):
                 continue
             line = production._openmes_origin_sale_line()

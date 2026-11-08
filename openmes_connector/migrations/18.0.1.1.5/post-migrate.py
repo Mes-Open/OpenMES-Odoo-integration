@@ -22,7 +22,7 @@ def migrate(cr, version):
             "WHERE openmes_line_code IS NOT NULL AND openmes_line_code <> ''"
         )
         codes = dict(cr.fetchall())
-    default = env["ir.config_parameter"].get_param("openmes_connector.default_line_code")
+    default = env["ir.config_parameter"].get_str("openmes_connector.default_line_code", False)
     # The settings of 18.0.1.1.0 belong to the main company (see 18.0.1.1.7),
     # not to the company the superuser happens to be in.
     company = env["res.company"]._openmes_main_company()

@@ -1,6 +1,6 @@
 {
     "name": "OpenMES Connector",
-    "version": "18.0.1.1.15",
+    "version": "20.0.1.0.0",
     "category": "Manufacturing",
     "summary": "Send Odoo sale orders or manufacturing orders to OpenMES as work orders and get status, "
     "change requests, settlements and stock documents back",
@@ -11,8 +11,7 @@
     "license": "LGPL-3",
     "depends": ["sale_management", "sale_stock", "mrp"],
     "data": [
-        "security/openmes_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ir_cron.xml",
         "views/openmes_work_order_views.xml",
         "views/openmes_sync_log_views.xml",

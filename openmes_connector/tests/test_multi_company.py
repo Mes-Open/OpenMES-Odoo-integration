@@ -16,6 +16,8 @@ from odoo.tools import mute_logger
 
 from .common import API_KEY, API_URL, REQUEST_PATH, FakeResponse, OpenmesCase, import_report
 
+# Odoo 20: ir.config_parameter.get_param/set_param are gone; the typed
+# get_str/set_str replace them (same stored text, same False default).
 URL_B = "https://mes-b.example.test"
 KEY_B = "omk_" + "b" * 40
 SECRET_A = "Aa1" + "a" * 37
@@ -260,7 +262,7 @@ class TestMultiCompany(OpenmesCase):
         with self.route(answer):
             self.env["openmes.work.order"]._cron_openmes_pull_status()
         self.assertEqual(production.state, "done", work_order.last_error)
-        self.assertEqual(production.lot_producing_id.company_id, self.company_b)
+        self.assertEqual(production.lot_producing_ids.company_id, self.company_b)
 
     def test_change_requests_and_settlement_per_company(self):
         wo_a = self._sent(self.company_a, change_request_id=11, change_request_type="CHANGE",
@@ -357,9 +359,10 @@ class TestMultiCompany(OpenmesCase):
         Workcenter = self.env["mrp.workcenter"]
         # Odoo refuses a company work center on a shared BoM, but a shared
         # work center moved into a company later stays on the BoMs using it.
-        wc_a = Workcenter.create({"name": "Oven A", "company_id": False, "resource_calendar_id": False,
+        # Odoo 20: a resource needs a calendar; the default one of mrp is shared (no company).
+        wc_a = Workcenter.create({"name": "Oven A", "company_id": False,
                                   "openmes_workstation_code": "WS-A"})
-        wc_shared = Workcenter.create({"name": "Mixer", "company_id": False, "resource_calendar_id": False,
+        wc_shared = Workcenter.create({"name": "Mixer", "company_id": False,
                                        "openmes_workstation_code": "WS-MIX"})
         bom = self.env["mrp.bom"].search([("product_tmpl_id", "=", self.bread.product_tmpl_id.id)])
         self.assertFalse(bom.company_id, "the bread BoM is shared")
@@ -609,7 +612,7 @@ class TestMultiCompany(OpenmesCase):
             self._process()
         self.assertEqual(seen, [self.company_b])
         self.assertEqual(production.state, "done")
-        backorder = production.procurement_group_id.mrp_production_ids - production
+        backorder = production._openmes_backorder_family() - production
         self.assertEqual(backorder.company_id, self.company_b)
         self.assertEqual(backorder.openmes_work_order_ids.company_id, self.company_b)
         self.assertEqual(backorder.openmes_work_order_ids.name[:4], "BBB-")
@@ -694,7 +697,7 @@ class TestMultiCompany(OpenmesCase):
         self.assertEqual(second.openmes_code, "WA-2")
 
     def test_webhook_registration_per_company(self):
-        self.env["ir.config_parameter"].sudo().set_param("web.base.url", "https://odoo.example.test")
+        self.env["ir.config_parameter"].sudo().set_str("web.base.url", "https://odoo.example.test")
         cron = self.env.ref("openmes_connector.ir_cron_openmes_pull_status")
         cron.write({"interval_number": 15, "interval_type": "minutes"})
 
@@ -912,10 +915,10 @@ class TestLegacySettingsMigration(OpenmesCase):
 
     def _set_params(self, **overrides):
         for key, value in dict(self.PARAMS, **overrides).items():
-            self.icp.set_param(key, value)
+            self.icp.set_str(key, value)
 
     def _params_left(self):
-        return [key for key in self.PARAMS if self.icp.get_param(key)]
+        return [key for key in self.PARAMS if self.icp.get_str(key, False)]
 
     def test_legacy_params_move_to_the_main_company(self):
         self._unconfigure()

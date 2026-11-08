@@ -360,7 +360,8 @@ class TestWebhookManufacturingOrder(OpenmesCase, HttpCase):
 
     def test_done_event_closes_the_manufacturing_order(self):
         production = self.env["mrp.production"].create({
-            "product_id": self.bun.id, "product_qty": 10, "product_uom_id": self.bun.uom_id.id,
+            # Odoo 20: mrp.bom(.line), mrp.production and mrp.workcenter.capacity renamed product_uom_id to uom_id.
+            "product_id": self.bun.id, "product_qty": 10, "uom_id": self.bun.uom_id.id,
         })
         production.action_confirm()
         work_order = production.openmes_work_order_ids

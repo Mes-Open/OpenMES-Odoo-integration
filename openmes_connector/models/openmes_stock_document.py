@@ -15,11 +15,9 @@ booked twice; a failed acknowledgement is only re-sent.
 
 import logging
 import re
-import threading
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, modules
 from odoo.exceptions import AccessError, RedirectWarning, UserError
-from odoo.tools import float_compare, float_round
 
 from .openmes_client import OpenmesApiError, parse_iso_datetime
 
@@ -147,14 +145,11 @@ class OpenmesStockDocument(models.Model):
     attempt_count = fields.Integer("Acknowledgement Attempts", readonly=True)
     acked_at = fields.Datetime("Acknowledged On", readonly=True)
 
-    _sql_constraints = [
-        # Same name as before: ids are unique within one OpenMES instance only.
-        (
-            "mes_id_unique",
-            "unique(mes_id, company_id)",
-            "An OpenMES stock document can only be imported once per company.",
-        ),
-    ]
+    # Same name as before: ids are unique within one OpenMES instance only.
+    _mes_id_unique = models.Constraint(
+        "unique(mes_id, company_id)",
+        "An OpenMES stock document can only be imported once per company.",
+    )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_booked(self):
@@ -458,7 +453,6 @@ class OpenmesStockDocument(models.Model):
 
         company = warehouse.company_id
         stock_location = warehouse.lot_stock_id
-        reference = MOVE_REFERENCE % self.name
         move_vals = []
         for line in self.line_ids:
             product, lot, qty = line._openmes_resolve(company)
@@ -469,10 +463,9 @@ class OpenmesStockDocument(models.Model):
                 source, destination = production_location, stock_location
             line.product_id = product
             move_vals.append({
-                "name": reference,
                 "origin": self.name,
                 "product_id": product.id,
-                "product_uom": product.uom_id.id,
+                "uom_id": product.uom_id.id,
                 "product_uom_qty": qty,
                 "location_id": source.id,
                 "location_dest_id": destination.id,
@@ -481,7 +474,7 @@ class OpenmesStockDocument(models.Model):
                 "picked": True,
                 "move_line_ids": [(0, 0, {
                     "product_id": product.id,
-                    "product_uom_id": product.uom_id.id,
+                    "uom_id": product.uom_id.id,
                     "quantity": qty,
                     "location_id": source.id,
                     "location_dest_id": destination.id,
@@ -553,13 +546,13 @@ class OpenmesStockDocument(models.Model):
         acknowledgements of documents that are already booked. Tests run in
         one transaction, so there it is a no-op.
         """
-        if not getattr(threading.current_thread(), "testing", False):
+        if not modules.module.current_test:
             self.env.cr.commit()
 
     @api.model
     def _openmes_rollback(self):
         """Counterpart of ``_openmes_commit`` after a failed run (no-op in tests)."""
-        if not getattr(threading.current_thread(), "testing", False):
+        if not modules.module.current_test:
             self.env.cr.rollback()
 
     @api.model
@@ -672,7 +665,7 @@ class OpenmesStockDocumentLine(models.Model):
     product_type_code = fields.Char(readonly=True)
     product_id = fields.Many2one("product.product", "Product", readonly=True)
     lot_number = fields.Char("Lot Number", readonly=True)
-    quantity = fields.Float(digits="Product Unit of Measure", readonly=True)
+    quantity = fields.Float(digits="Product Unit", readonly=True)
     invalid_quantity = fields.Char(
         readonly=True, help="The quantity exactly as OpenMES sent it, when it was not a number."
     )
@@ -712,15 +705,15 @@ class OpenmesStockDocumentLine(models.Model):
                     uom=uom.name,
                 )
             )
-        qty = float_round(self.quantity, precision_rounding=uom.rounding)
-        if float_compare(qty, 0.0, precision_rounding=uom.rounding) <= 0:
+        qty = uom.round(self.quantity)
+        if uom.compare(qty, 0.0) <= 0:
             raise UserError(_("Quantity of “%s” must be greater than zero.", code))
 
         lot = self.env["stock.lot"]
-        if product.tracking != "none":
+        if product.tracking in ("lot", "serial"):
             if not self.lot_number:
                 raise UserError(_("Product “%s” is tracked by lot or serial number, but the line has none.", code))
-            if product.tracking == "serial" and float_compare(qty, 1.0, precision_rounding=uom.rounding):
+            if product.tracking == "serial" and uom.compare(qty, 1.0):
                 raise UserError(_("Serial-tracked product “%s” must come with quantity 1 per line.", code))
             Lot = self.env["stock.lot"].sudo().with_company(company)
             lot = Lot.search(

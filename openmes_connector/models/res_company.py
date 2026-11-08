@@ -256,7 +256,7 @@ class ResCompany(models.Model):
         delete the parameters. Idempotent; never overwrites a company that is
         configured already and never raises on bad legacy values."""
         icp = self.env["ir.config_parameter"].sudo()
-        legacy = {key: icp.get_param(key) for key in LEGACY_PARAMS}
+        legacy = {key: icp.get_str(key, False) for key in LEGACY_PARAMS}
         if not any(legacy.values()):
             return False
         company = self._openmes_main_company()
@@ -271,8 +271,8 @@ class ResCompany(models.Model):
                     "OpenMES (Settings > Webhooks), or its deliveries are rejected with 401.",
                     webhook_id,
                 )
-        for key in LEGACY_PARAMS:
-            icp.set_param(key, False)
+        # Odoo 20: set_str(key, False) keeps an empty record (set_param deleted it).
+        icp.search([("key", "in", LEGACY_PARAMS)]).unlink()
         return True
 
     @api.model

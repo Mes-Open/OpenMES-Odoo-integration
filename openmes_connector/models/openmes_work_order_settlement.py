@@ -14,7 +14,7 @@ import math
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 
-from .openmes_client import OpenmesApiError
+from .openmes_client import OpenmesApiError, uom_rounding
 from .openmes_work_order import MAX_AUTO_ATTEMPTS
 from .openmes_work_order_attention import _qty_str
 
@@ -65,9 +65,9 @@ class OpenmesWorkOrderConsumption(models.Model):
         readonly=True,
         help="Lots picked for this material in OpenMES, with the picked quantity in brackets.",
     )
-    consumed_qty = fields.Float("Consumed", digits="Product Unit of Measure", readonly=True)
-    scrap_qty = fields.Float("Scrapped", digits="Product Unit of Measure", readonly=True)
-    returned_qty = fields.Float("Returned", digits="Product Unit of Measure", readonly=True)
+    consumed_qty = fields.Float("Consumed", digits="Product Unit", readonly=True)
+    scrap_qty = fields.Float("Scrapped", digits="Product Unit", readonly=True)
+    returned_qty = fields.Float("Returned", digits="Product Unit", readonly=True)
     unit_of_measure = fields.Char(
         "Unit", readonly=True, help="The unit of measure as OpenMES sent it; it is not converted."
     )
@@ -89,7 +89,7 @@ class OpenmesWorkOrder(models.Model):
     settlement_date = fields.Datetime("Settlement Fetched On", readonly=True, copy=False)
     scrap_qty = fields.Float(
         "Scrap",
-        digits="Product Unit of Measure",
+        digits="Product Unit",
         readonly=True,
         copy=False,
         help="Total scrap reported in OpenMES, in the unit of measure of the work order's product.",
@@ -335,7 +335,7 @@ class OpenmesWorkOrder(models.Model):
             "Settlement of OpenMES work order %(order)s: scrap %(scrap)s %(uom)s, total cost %(total)s "
             "%(currency)s (%(unit)s %(currency)s per unit), %(count)s material(s) consumed.",
             order=self.name,
-            scrap=_qty_str(self.scrap_qty, self.product_id.uom_id.rounding),
+            scrap=_qty_str(self.scrap_qty, uom_rounding(self.env)),
             uom=self.product_uom_id.name,
             total="%.2f" % self.settlement_total_cost,
             unit="%.4f" % self.settlement_cost_per_unit,

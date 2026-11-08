@@ -105,10 +105,10 @@ class MrpProduction(models.Model):
             return
         # The quantity of the finished move that _cal_price multiplies
         # extra_cost by, in the product's unit of measure.
-        qty = self.product_uom_id._compute_quantity(
+        qty = self.uom_id._compute_quantity(
             self.qty_producing - self.qty_produced, self.product_id.uom_id, round=False
         )
-        if float_compare(qty, 0.0, precision_rounding=self.product_id.uom_id.rounding) <= 0:
+        if self.product_id.uom_id.compare(qty, 0.0) <= 0:
             return
         labor = work_order.settlement_labor_cost
         additional = work_order.settlement_additional_cost

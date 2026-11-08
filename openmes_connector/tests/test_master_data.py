@@ -41,13 +41,46 @@ class TestMasterData(OpenmesCase):
 
         self.assertEqual(logs.mapped("state"), ["success"] * 3)
 
+    def test_routing_run_time_follows_odoo_capacity(self):
+        # Odoo 19: without a capacity row a cycle makes the BoM quantity; a row
+        # in another unit (dozens) is converted to the product unit.
+        plain = self.env["mrp.workcenter"].create({"name": "Bench"})
+        dozens = self.env["mrp.workcenter"].create({
+            # Odoo 20: mrp.bom(.line), mrp.production and mrp.workcenter.capacity renamed product_uom_id to uom_id.
+            "name": "Rack", "capacity_ids": [(0, 0, {"capacity": 2, "uom_id": self.uom_dozen.id})],
+        })
+        bom = self.env["mrp.bom"].search([("product_tmpl_id", "=", self.bread.product_tmpl_id.id)])
+        self.assertEqual(bom.product_qty, 10)
+        bom.write({"operation_ids": [
+            (0, 0, {"name": "Shaping", "workcenter_id": plain.id, "time_cycle_manual": 5, "sequence": 1}),
+            (0, 0, {"name": "Proofing", "workcenter_id": dozens.id, "time_cycle_manual": 48, "sequence": 2}),
+        ]})
+        row = self.env["openmes.sync"]._routing_row(self.bread, bom)
+        # 5 min per 10 breads; the dozens row does not apply to a BoM in units
+        # (Odoo ignores it too), so 48 min per 10 breads.
+        self.assertEqual([s["run_time_per_unit_minutes"] for s in row["steps"]], [0.5, 4.8])
+        # A BoM in dozens: one cycle on the bench makes 1 dozen = 12 cakes, and
+        # the rack's row (2 dozen = 24 cakes) applies.
+        cake_bom = self.env["mrp.bom"].create({
+            "product_tmpl_id": self.cake.product_tmpl_id.id,
+            "product_qty": 1,
+            # Odoo 20: mrp.bom(.line), mrp.production and mrp.workcenter.capacity renamed product_uom_id to uom_id.
+            "uom_id": self.uom_dozen.id,
+            "operation_ids": [
+                (0, 0, {"name": "Shaping", "workcenter_id": plain.id, "time_cycle_manual": 6, "sequence": 1}),
+                (0, 0, {"name": "Proofing", "workcenter_id": dozens.id, "time_cycle_manual": 48, "sequence": 2}),
+            ],
+        })
+        row = self.env["openmes.sync"]._routing_row(self.cake, cake_bom)
+        self.assertEqual([s["run_time_per_unit_minutes"] for s in row["steps"]], [0.5, 2.0])
+
     def test_bom_operations_are_sent_as_a_routing(self):
-        workcenter = self.env["mrp.workcenter"].create({"name": "Oven", "default_capacity": 2})
+        workcenter = self.env["mrp.workcenter"].create({"name": "Oven", "capacity_ids": [(0, 0, {"capacity": 2})]})
         bom = self.env["mrp.bom"].search([("product_tmpl_id", "=", self.bread.product_tmpl_id.id)])
         bom.write({"operation_ids": [
             (0, 0, {"name": "Mixing", "workcenter_id": workcenter.id, "time_cycle_manual": 6, "sequence": 1}),
             (0, 0, {"name": "Baking", "workcenter_id": workcenter.id, "time_cycle_manual": 40, "sequence": 2,
-                    "note": "<p>Bake at 220 °C</p>"}),
+                    **self._operation_note("<p>Bake at 220 °C</p>")}),
         ]})
         with self.mock_openmes(
             import_report(imported=1),  # cake: no operations → default template
@@ -73,7 +106,10 @@ class TestMasterData(OpenmesCase):
         self.assertEqual([(s["step_number"], s["name"]) for s in template["steps"]], [(10, "Mixing"), (20, "Baking")])
         # Minutes per cycle / units per cycle.
         self.assertEqual([s["run_time_per_unit_minutes"] for s in template["steps"]], [3.0, 20.0])
-        self.assertIn("220", template["steps"][1]["instruction"])
+        if self._has_operation_note():
+            self.assertIn("220", template["steps"][1]["instruction"])
+        else:
+            self.assertNotIn("instruction", template["steps"][1])
         self.assertIn("routings", logs.mapped("operation"))
         product_logs = logs.filtered(lambda l: l.operation == "products")
         self.assertEqual(len(product_logs), 1, "both product batches report as one entry")

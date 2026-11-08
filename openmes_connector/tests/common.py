@@ -56,11 +56,11 @@ class OpenmesCase(TransactionCase):
         cls.partner = cls.env["res.partner"].create({"name": "Bakery Customer"})
         cls.flour = cls.env["product.product"].create({
             "name": "Rye flour", "default_code": "FLOUR-01", "is_storable": True,
-            "uom_id": cls.uom_kg.id, "uom_po_id": cls.uom_kg.id, "standard_price": 2.5,
+            "uom_id": cls.uom_kg.id, "standard_price": 2.5,
         })
         cls.yeast = cls.env["product.product"].create({
             "name": "Yeast", "default_code": "YEAST-01", "is_storable": True,
-            "uom_id": cls.uom_kg.id, "uom_po_id": cls.uom_kg.id, "tracking": "lot",
+            "uom_id": cls.uom_kg.id, "tracking": "lot",
         })
         cls.bread = cls.env["product.product"].create({
             "name": "Rye bread", "default_code": "BREAD-01", "is_storable": True,
@@ -77,7 +77,8 @@ class OpenmesCase(TransactionCase):
             "product_qty": 10,
             "bom_line_ids": [
                 (0, 0, {"product_id": cls.flour.id, "product_qty": 5}),
-                (0, 0, {"product_id": cls.yeast.id, "product_qty": 100, "product_uom_id": cls.uom_gram.id}),
+                # Odoo 20: mrp.bom(.line), mrp.production and mrp.workcenter.capacity renamed product_uom_id to uom_id.
+                (0, 0, {"product_id": cls.yeast.id, "product_qty": 100, "uom_id": cls.uom_gram.id}),
             ],
         })
 
@@ -86,6 +87,15 @@ class OpenmesCase(TransactionCase):
         """Write OpenMES settings (``enabled=False``, ``order_source=…``) on a company."""
         company = company or cls.env.company
         company.sudo().write({f"openmes_{key}": value for key, value in vals.items()})
+
+    @classmethod
+    def _has_operation_note(cls):
+        """Odoo 19 Community dropped the operation description (``note``)."""
+        return "note" in cls.env["mrp.routing.workcenter"]._fields
+
+    @classmethod
+    def _operation_note(cls, html):
+        return {"note": html} if cls._has_operation_note() else {}
 
     def _create_order(self, lines):
         return self.env["sale.order"].create({

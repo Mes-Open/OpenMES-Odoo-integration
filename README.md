@@ -2,7 +2,7 @@
 
 # OpenMES Odoo integration
 
-An Odoo 18 module, **OpenMES Connector** (`openmes_connector/`), that connects
+An Odoo 20.0 module, **OpenMES Connector** (`openmes_connector/`), that connects
 [Odoo](https://www.odoo.com) with [OpenMES](https://github.com/Mes-Open/OpenMes),
 the open-source manufacturing execution system, through the OpenMES ERP API.
 
@@ -35,7 +35,7 @@ Full configuration and usage: [`openmes_connector/README.rst`](openmes_connector
 
 | | |
 |---|---|
-| Odoo | 18.0 (Community or Enterprise) — `sale_management`, `sale_stock`, `mrp` |
+| Odoo | 20.0 (Community or Enterprise) — `sale_management`, `sale_stock`, `mrp` |
 | OpenMES | a version with the ERP integration API (API keys with scopes, change requests, webhooks) |
 | Hosting | Odoo.sh or on-premise. Custom modules cannot be installed on Odoo Online (SaaS). |
 
@@ -56,7 +56,7 @@ sent anywhere else.
 
 ## Branches
 
-One branch per Odoo version: `18.0`.
+One branch per Odoo version: `18.0`, `19.0`, `20.0`.
 
 ## License
 

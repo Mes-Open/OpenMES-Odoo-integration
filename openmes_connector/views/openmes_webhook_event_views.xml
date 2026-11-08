@@ -71,7 +71,7 @@
                 <filter string="Pending" name="pending" domain="[('state', '=', 'pending')]"/>
                 <filter string="Errors" name="error" domain="[('state', '=', 'error')]"/>
                 <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Event" name="group_event" context="{'group_by': 'event'}"/>
                     <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
                     <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"
