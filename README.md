@@ -1,3 +1,5 @@
+<p align="center"><img src="openmes_connector/static/description/openmes_logo.png" alt="OpenMES" width="240"/></p>
+
 # OpenMES Odoo integration
 
 An Odoo 18 module, **OpenMES Connector** (`openmes_connector/`), that connects
@@ -6,6 +8,14 @@ the open-source manufacturing execution system, through the OpenMES ERP API.
 
 > **Part of the OpenMES ecosystem** — see the main project at
 > [github.com/Mes-Open/OpenMes](https://github.com/Mes-Open/OpenMes).
+
+## Demo
+
+[![Odoo ↔ OpenMES — full end-to-end demo (9 min)](openmes_connector/static/description/demo_video.png)](https://github.com/Mes-Open/OpenMES-Odoo-integration/releases/download/18.0.1.1.14/openmes-odoo-e2e-demo.mp4)
+
+Nine minutes, one take: connecting Odoo to OpenMES, a sale order becoming a work order, a
+quantity change approved on the shop floor, the settlement coming back, and manufacturing
+orders closed automatically. [Download / play the MP4](https://github.com/Mes-Open/OpenMES-Odoo-integration/releases/download/18.0.1.1.14/openmes-odoo-e2e-demo.mp4).
 
 ## What it does
 
