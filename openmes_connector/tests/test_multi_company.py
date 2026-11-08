@@ -260,7 +260,7 @@ class TestMultiCompany(OpenmesCase):
         with self.route(answer):
             self.env["openmes.work.order"]._cron_openmes_pull_status()
         self.assertEqual(production.state, "done", work_order.last_error)
-        self.assertEqual(production.lot_producing_id.company_id, self.company_b)
+        self.assertEqual(production.lot_producing_ids.company_id, self.company_b)
 
     def test_change_requests_and_settlement_per_company(self):
         wo_a = self._sent(self.company_a, change_request_id=11, change_request_type="CHANGE",
@@ -609,7 +609,7 @@ class TestMultiCompany(OpenmesCase):
             self._process()
         self.assertEqual(seen, [self.company_b])
         self.assertEqual(production.state, "done")
-        backorder = production.procurement_group_id.mrp_production_ids - production
+        backorder = production._openmes_backorder_family() - production
         self.assertEqual(backorder.company_id, self.company_b)
         self.assertEqual(backorder.openmes_work_order_ids.company_id, self.company_b)
         self.assertEqual(backorder.openmes_work_order_ids.name[:4], "BBB-")

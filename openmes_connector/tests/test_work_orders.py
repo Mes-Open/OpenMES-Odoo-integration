@@ -33,7 +33,7 @@ class TestWorkOrders(OpenmesCase):
         self.assertEqual(order.openmes_work_order_count, 2)
 
     def test_confirm_converts_quantity_to_product_uom(self):
-        order = self._create_order([(self.bread, 2, {"product_uom": self.uom_dozen.id, "price_unit": 48.0})])
+        order = self._create_order([(self.bread, 2, {"product_uom_id": self.uom_dozen.id, "price_unit": 48.0})])
         order.action_confirm()
         self.assertAlmostEqual(order.openmes_work_order_ids.planned_qty, 24.0)
 
@@ -118,6 +118,19 @@ class TestWorkOrders(OpenmesCase):
         self.assertEqual(work_order.change_request_status, "SUBMITTED")
         self.assertEqual(work_order.mes_planned_qty, 10, "OpenMES keeps producing 10 until the change is applied")
         self.assertTrue(any("change request" in (m.body or "") for m in order.message_ids))
+
+    def test_unit_change_on_confirmed_line_resends_converted_quantity(self):
+        # Odoo 19 renamed sale.order.line.product_uom to product_uom_id.
+        order = self._create_order([(self.bread, 2, {})])
+        order.action_confirm()
+        work_order = order.openmes_work_order_ids
+        work_order.write({"state": "sent", "mes_id": 77, "mes_status": "PENDING", "mes_planned_qty": 2})
+        order.order_line.product_uom_id = self.uom_dozen
+        self.assertEqual(work_order.state, "to_send", "a unit change queues a resend")
+        self.assertAlmostEqual(work_order.planned_qty, 24.0, msg="sent in the product unit")
+        with self.mock_openmes(import_report(updated=1)) as calls:
+            self.env["openmes.work.order"]._cron_openmes_send()
+        self.assertEqual(calls[0]["json"]["orders"][0]["planned_qty"], 24.0)
 
     def test_change_on_finished_order_is_not_sent(self):
         order = self._create_order([(self.bread, 10, {})])

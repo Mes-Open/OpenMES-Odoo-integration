@@ -403,7 +403,7 @@ class TestManufacturingOrders(OpenmesCase):
         self.assertEqual(production.state, "done")
         self.assertEqual(production.qty_producing, 10)
         self.assertFalse(work_order.last_error)
-        self.assertEqual(self.env["mrp.production"].search_count([("procurement_group_id", "=", production.procurement_group_id.id)]), 1)
+        self.assertEqual(self.env["mrp.production"].search_count([("production_group_id", "=", production.production_group_id.id)]), 1)
         self.assertIn("Marked as done", self._messages(production))
 
     def test_done_under_produced_creates_backorder_with_its_own_work_order(self):
@@ -413,7 +413,7 @@ class TestManufacturingOrders(OpenmesCase):
         self._pull(self._done_row(work_order, 6))
         self.assertEqual(production.state, "done")
         self.assertEqual(production.qty_produced, 6)
-        backorder = production.procurement_group_id.mrp_production_ids - production
+        backorder = production._openmes_backorder_family() - production
         self.assertEqual(len(backorder), 1)
         self.assertEqual(backorder.product_qty, 4)
         self.assertEqual(backorder.state, "confirmed")
@@ -517,7 +517,7 @@ class TestManufacturingOrders(OpenmesCase):
         self._pull(self._done_row(work_order, 12))
         self.assertEqual(production.state, "done")
         self.assertEqual(production.qty_produced, 12)
-        self.assertEqual(production.procurement_group_id.mrp_production_ids, production, "no backorder")
+        self.assertEqual(production._openmes_backorder_family(), production, "no backorder")
         self.assertFalse(work_order.last_error)
 
     def test_unexpected_close_exception_does_not_stop_the_pull(self):
@@ -557,7 +557,7 @@ class TestManufacturingOrders(OpenmesCase):
         self._pull(self._done_row(work_order, 10))
         self.assertEqual(production.state, "done")
         self.assertFalse(work_order.last_error)
-        lot = production.lot_producing_id
+        lot = production.lot_producing_ids
         self.assertTrue(lot)
         # Standard Odoo: the lot follows the company of the product (shared here).
         self.assertEqual((lot.product_id, lot.company_id), (self.loaf, self.loaf.company_id))
@@ -574,11 +574,11 @@ class TestManufacturingOrders(OpenmesCase):
         production = self._create_mo(self.loaf, 10)
         work_order = production.openmes_work_order_ids
         manual = self.env["stock.lot"].create({"name": "L-MANUAL", "product_id": self.loaf.id})
-        production.lot_producing_id = manual
+        production.lot_producing_ids = manual
         self._sent(work_order)
         self._pull(self._done_row(work_order, 10))
         self.assertEqual(production.state, "done")
-        self.assertEqual(production.lot_producing_id, manual)
+        self.assertEqual(production.lot_producing_ids, manual)
         self.assertEqual(self._lots(self.loaf), manual, "no other lot is created")
         self.assertNotIn("Odoo created lot", self._messages(production))
         self.assertIn("Finished product lot: L-MANUAL.", self._messages(production))
@@ -592,13 +592,13 @@ class TestManufacturingOrders(OpenmesCase):
         self._pull(self._done_row(work_order, 6))
         self.assertEqual(production.state, "done")
         self.assertEqual(production.qty_produced, 6)
-        first_lot = production.lot_producing_id
+        first_lot = production.lot_producing_ids
         self.assertTrue(first_lot)
-        backorder = production.procurement_group_id.mrp_production_ids - production
+        backorder = production._openmes_backorder_family() - production
         self.assertEqual(len(backorder), 1)
         self.assertEqual(backorder.product_qty, 4)
         # Odoo 18 does not copy the lot to the backorder: it gets its own on its close.
-        self.assertFalse(backorder.lot_producing_id)
+        self.assertFalse(backorder.lot_producing_ids)
         backorder_wo = backorder.openmes_work_order_ids
         self.assertEqual(backorder_wo.state, "to_send")
         self.assertIn("backorder", self._messages(production))
@@ -607,8 +607,8 @@ class TestManufacturingOrders(OpenmesCase):
         self._pull(self._done_row(backorder_wo, 4, id=78, updated_at="2026-11-03T09:00:00+00:00"))
         self.assertEqual(backorder.state, "done")
         self.assertFalse(backorder_wo.last_error)
-        self.assertTrue(backorder.lot_producing_id)
-        self.assertNotEqual(backorder.lot_producing_id, first_lot)
+        self.assertTrue(backorder.lot_producing_ids)
+        self.assertNotEqual(backorder.lot_producing_ids, first_lot)
         self.assertEqual(len(self._lots(self.loaf)), 2)
 
     def _serial_mo(self, user=None):
@@ -664,7 +664,7 @@ class TestManufacturingOrders(OpenmesCase):
         self.assertTrue(work_order.last_error)
         serial = self.env["stock.lot"].create({"name": "CAKE-SN-1", "product_id": self.cake.id})
         manual = production.with_user(mrp_user)
-        manual.lot_producing_id = serial
+        manual.lot_producing_ids = serial
         manual.qty_producing = 1
         manual._set_qty_producing()
         manual.button_mark_done()
@@ -686,7 +686,7 @@ class TestManufacturingOrders(OpenmesCase):
         self._sent(work_order)
         self._pull(self._done_row(work_order, 10))
         self.assertEqual(production.state, "done")
-        self.assertFalse(production.lot_producing_id)
+        self.assertFalse(production.lot_producing_ids)
         self.assertFalse(work_order.production_lot_name)
         self.assertNotIn("lot", self._messages(production).lower())
         self.assertFalse(work_order.serial_activity_scheduled)
@@ -698,7 +698,7 @@ class TestManufacturingOrders(OpenmesCase):
         self._pull(self._done_row(work_order, 10))
         self.assertNotEqual(production.state, "done")
         self.assertIn("could not mark the manufacturing order as done", work_order.last_error)
-        lot = production.lot_producing_id
+        lot = production.lot_producing_ids
         self.assertTrue(lot, "the lot stays for the retry")
         self.assertIn("Odoo created lot %s" % lot.name, self._messages(production))
 
@@ -708,7 +708,7 @@ class TestManufacturingOrders(OpenmesCase):
         action = work_order.with_user(manager).action_openmes_finish_production()
         self.assertEqual(action["params"]["type"], "success")
         self.assertEqual(production.state, "done")
-        self.assertEqual(production.lot_producing_id, lot)
+        self.assertEqual(production.lot_producing_ids, lot)
         self.assertEqual(self._lots(self.seeded_loaf), lot)
 
     def test_lot_generation_error_is_reported(self):
@@ -724,7 +724,7 @@ class TestManufacturingOrders(OpenmesCase):
         with patch.object(type(failing), "action_generate_serial", action_generate_serial):
             self._pull(self._done_row(failing_wo, 10), self._done_row(fine_wo, 10, id=78))
         self.assertNotEqual(failing.state, "done")
-        self.assertFalse(failing.lot_producing_id)
+        self.assertFalse(failing.lot_producing_ids)
         self.assertIn("could not mark the manufacturing order as done", failing_wo.last_error)
         self.assertIn("No lot sequence", failing_wo.last_error)
         self.assertEqual(fine.state, "done", "the next row of the feed is still applied")
@@ -748,6 +748,47 @@ class TestManufacturingOrders(OpenmesCase):
         self.assertFalse(self._lots(self.loaf))
         self.assertNotEqual(production.state, "done")
 
+    def test_origin_sale_order_from_stock_reference_only_when_unambiguous(self):
+        # Odoo 19 links MOs to sale orders through stock references, possibly several.
+        first = self._create_order([(self.plain, 1, {})])
+        second = self._create_order([(self.plain, 1, {})])
+        production = self._create_mo(self.plain, 1, confirm=False)
+        reference = self.env["stock.reference"].create({"name": "REF-19", "sale_ids": [(6, 0, first.ids)]})
+        production.reference_ids = reference
+        self.assertEqual(production._openmes_origin_sale_order(), first)
+        reference.sale_ids = first | second
+        self.assertFalse(production._openmes_origin_sale_order(), "two sale orders: none is guessed")
+
+    def test_production_lot_name_lists_every_finished_lot(self):
+        # Odoo 19: an MO has lot_producing_ids (several serial numbers possible).
+        production = self._create_mo(self.cake, 2)
+        work_order = production.openmes_work_order_ids
+        self.assertFalse(work_order.production_lot_name, "no lot yet")
+        first, second = self.env["stock.lot"].create([
+            {"name": "CAKE-SN-1", "product_id": self.cake.id},
+            {"name": "CAKE-SN-2", "product_id": self.cake.id},
+        ])
+        production.lot_producing_ids = first
+        self.assertEqual(work_order.production_lot_name, "CAKE-SN-1")
+        production.lot_producing_ids = first | second
+        self.assertEqual(work_order.production_lot_name, "CAKE-SN-1, CAKE-SN-2")
+
+    def test_backorder_family_is_the_production_group(self):
+        # Odoo 19 links backorders through production_group_id, not a procurement group.
+        production = self._create_mo(self.bun, 10)
+        other = self._create_mo(self.bun, 10)
+        self.assertEqual(production._openmes_backorder_family(), production)
+        work_order = production.openmes_work_order_ids
+        self._sent(work_order)
+        self._pull(self._done_row(work_order, 7))
+        family = production._openmes_backorder_family()
+        backorder = family - production
+        self.assertEqual(len(backorder), 1, "exactly one backorder")
+        self.assertNotIn(other, family, "an unrelated MO is not a backorder")
+        self.assertEqual(len(backorder.openmes_work_order_ids), 1)
+        self.assertEqual(len(other.openmes_work_order_ids), 1, "the unrelated MO keeps its single work order")
+        self.assertIn(backorder.name, self._messages(production))
+
     def test_salesman_reads_finished_lot_of_mto_work_order(self):
         salesman = new_test_user(self.env, "om_salesman_lot", groups="sales_team.group_sale_salesman_all_leads")
         order, production = self._mto_order(self.loaf, 3)
@@ -756,7 +797,7 @@ class TestManufacturingOrders(OpenmesCase):
         self._pull(self._done_row(work_order, 3))
         self.assertEqual(production.state, "done")
         values = work_order.with_user(salesman).read(["production_lot_name"])[0]
-        self.assertEqual(values["production_lot_name"], production.lot_producing_id.name)
+        self.assertEqual(values["production_lot_name"], production.lot_producing_ids.name)
 
     def test_status_pull_errors_leave_lot_tracked_mo_untouched(self):
         production = self._create_mo(self.loaf, 10)
@@ -771,7 +812,7 @@ class TestManufacturingOrders(OpenmesCase):
                 self.env["openmes.work.order"]._cron_openmes_pull_status()
             self.assertEqual(work_order.mes_status, "IN_PROGRESS")
             self.assertNotEqual(production.state, "done")
-            self.assertFalse(production.lot_producing_id)
+            self.assertFalse(production.lot_producing_ids)
             self.assertFalse(self._lots(self.loaf))
 
     # ── Splits and closes done in Odoo ───────────────────────────────────────
@@ -780,7 +821,7 @@ class TestManufacturingOrders(OpenmesCase):
         production.qty_producing = qty
         production._set_qty_producing()
         production.with_context(skip_backorder=True, mo_ids_to_backorder=production.ids).button_mark_done()
-        return production.procurement_group_id.mrp_production_ids - production
+        return production._openmes_backorder_family() - production
 
     def test_backorder_of_mo_outside_openmes_is_not_sent(self):
         self._set_source("sale_lines")
@@ -848,7 +889,7 @@ class TestManufacturingOrders(OpenmesCase):
         expected = float_round(7 / 12, precision_rounding=self.uom_dozen.rounding, rounding_method="HALF-UP")
         self.assertAlmostEqual(production.qty_producing, expected)
         self.assertEqual(production.state, "done")
-        self.assertTrue(production.procurement_group_id.mrp_production_ids - production, "backorder for the rest")
+        self.assertTrue(production._openmes_backorder_family() - production, "backorder for the rest")
 
     def test_update_queued_when_openmes_finishes_is_not_sent(self):
         production = self._create_mo(self.bun, 10)

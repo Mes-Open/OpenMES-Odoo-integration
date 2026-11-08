@@ -147,7 +147,7 @@
         <field name="model_id" ref="model_openmes_stock_document"/>
         <field name="binding_model_id" ref="model_openmes_stock_document"/>
         <field name="binding_view_types">list</field>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_manager')), (4, ref('mrp.group_mrp_manager'))]"/>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('mrp.group_mrp_manager'))]"/>
         <field name="state">code</field>
         <field name="code">action = records.action_retry()</field>
     </record>

@@ -2,8 +2,12 @@
 OpenMES Connector
 =================
 
-Connects Odoo 18 to `OpenMES <https://github.com/Mes-Open/OpenMes>`_ through
+Connects Odoo 19 to `OpenMES <https://github.com/Mes-Open/OpenMes>`_ through
 the OpenMES ERP integration API (``/api/v1/erp``).
+
+Requirements: **Odoo 19.0** (Community or Enterprise) with Sales
+(``sale_management``), Inventory (``sale_stock``) and Manufacturing (``mrp``).
+This is the 19.0 branch of the module; Odoo 18.0 has its own branch.
 
 Features
 ========
@@ -98,7 +102,9 @@ Features
   hand on the MO before the close is used instead. The lot is kept even if
   the close then fails (e.g. a component lot is missing), so **Close
   Manufacturing Order** reuses it. A backorder gets its own lot when it is
-  closed. The work order form shows it as *Finished Product Lot*. Products
+  closed. The work order form shows it as *Finished Product Lot* (with
+  several lots or serial numbers on the MO, as Odoo 19 allows, all of them,
+  comma-separated). Products
   tracked by serial numbers are never closed automatically: the work order's
   last error and a message on the MO say so, and the MO's responsible (or the
   salesperson of the sale order) gets one To-Do to assign the serial numbers
@@ -114,7 +120,8 @@ Features
     planning or producing; one activity per change request, also after later
     pulls or after the activity was marked done;
   - when OpenMES finishes a work order with more or less than planned in Odoo
-    (compared after rounding to the product's unit, like Odoo does) — *check
+    (compared at the *Product Unit* decimal precision, which Odoo 19 uses for
+    every unit of measure) — *check
     the delivery and the invoice*, with both quantities and the difference.
 
   The work order is flagged with a *Quantity Difference* (OpenMES plans a
@@ -144,7 +151,12 @@ Features
   version per change), their BoM components become materials, and each BoM
   becomes a recipe (quantity per one unit, ``replace`` mode). A product whose
   BoM has no operations gets a one-step default template, so its orders are
-  accepted right away. Runs daily, or from Settings.
+  accepted right away. Each step's run time per unit is the operation's
+  cycle time divided by the units one cycle makes, as Odoo 19 plans it: the
+  work center's *Product Capacities* row for the product or its unit, else the
+  BoM quantity (converted to the product's unit). Odoo 19 Community has no operation
+  description, so steps get no instruction unless a module adds the
+  operation ``note`` field back. Runs daily, or from Settings.
 * **Work centers → workstations**: an operation whose work center has an
   *OpenMES Workstation Code* is sent with that ``workstation_code`` and the
   ``line_code`` of the product's OpenMES line (or the default line), so the
@@ -456,8 +468,21 @@ acknowledgement failed; it is re-sent automatically up to five times, then
 only with **Retry**. **Settings > OpenMES > Book Stock Documents** runs the
 import at once.
 
+Upgrading from Odoo 18 to Odoo 19
+=================================
+
+The module has no cross-version migrations. Upgrade the database from Odoo
+18 to 19 with Odoo's standard migration tool (the Odoo Upgrade service, or
+OpenUpgrade for Community), with the 18.0 module installed at its latest
+version (18.0.1.1.15 or later); then install this 19.0 module in place of the
+18.0 one. The data model is the same: the unique constraints keep their
+names, and no field is added or removed. A new Odoo 19 database starts clean.
+
 Upgrading from 18.0.1.1.0
 =========================
+
+This section is about the 18.0 module and is kept for reference: upgrade to
+the latest 18.0 version first, then to Odoo 19 (above).
 
 Update the module (``-u openmes_connector``); the data migrations run on
 their own and keep every existing work order with its state, OpenMES id,
@@ -488,7 +513,7 @@ quantities, pending cancellation and change request. What changes:
   so an OpenMES retry across the upgrade is still answered as a duplicate.
 
 ``scripts/test_upgrade.sh`` in the repository checks all of this on a
-database created with 18.0.1.1.0.
+database created with 18.0.1.1.0 (it runs on Odoo 18.0 only).
 
 Known limitations
 =================

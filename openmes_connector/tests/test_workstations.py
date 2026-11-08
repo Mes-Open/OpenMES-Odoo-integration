@@ -23,13 +23,13 @@ class TestWorkstations(OpenmesCase):
     def setUpClass(cls):
         super().setUpClass()
         Workcenter = cls.env["mrp.workcenter"]
-        cls.oven = Workcenter.create({"name": "Oven", "openmes_workstation_code": "WS-OVEN", "default_capacity": 2})
+        cls.oven = Workcenter.create({"name": "Oven", "openmes_workstation_code": "WS-OVEN", "capacity_ids": [(0, 0, {"capacity": 2})]})
         cls.table = Workcenter.create({"name": "Mixing table"})
         cls.bread_bom = cls.env["mrp.bom"].search([("product_tmpl_id", "=", cls.bread.product_tmpl_id.id)])
         cls.bread_bom.write({"operation_ids": [
             (0, 0, {"name": "Mixing", "workcenter_id": cls.table.id, "time_cycle_manual": 6, "sequence": 1}),
             (0, 0, {"name": "Baking", "workcenter_id": cls.oven.id, "time_cycle_manual": 40, "sequence": 2,
-                    "note": "<p>Bake at 220 °C</p>"}),
+                    **cls._operation_note("<p>Bake at 220 °C</p>")}),
         ]})
 
     def _sync(self, *routing_answers):
@@ -62,10 +62,16 @@ class TestWorkstations(OpenmesCase):
         self.assertNotIn("line_code", mixing)
         self.assertEqual(baking["workstation_code"], "WS-OVEN")
         self.assertEqual(baking["line_code"], "L1", "the company's default line")
+        # No capacity row on the mixing table: one cycle makes the whole BoM
+        # quantity (10 breads), as Odoo 19 plans it.
+        self.assertEqual(mixing["run_time_per_unit_minutes"], 0.6)
         # The rest of the step is unchanged.
         self.assertEqual((baking["step_number"], baking["name"], baking["run_time_per_unit_minutes"]),
                          (20, "Baking", 20.0))
-        self.assertIn("220", baking["instruction"])
+        if self._has_operation_note():
+            self.assertIn("220", baking["instruction"])
+        else:
+            self.assertNotIn("instruction", baking)
         self.assertEqual(logs.filtered(lambda l: l.operation == "routings").state, "success")
 
     def test_product_line_is_sent(self):

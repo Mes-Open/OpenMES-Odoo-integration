@@ -118,6 +118,23 @@ class TestWebhookQueue(QueueCase):
         self.assertEqual(self._triggers(self.queue_cron), triggers + 1)
         self.assertIn('"status": "IN_PROGRESS"', event.payload_text)
 
+    def test_cron_reports_its_progress_to_odoo(self):
+        # Skipped in tests (it commits); called with Odoo 19's signature otherwise.
+        from types import SimpleNamespace
+
+        from ..models import openmes_webhook
+
+        self._deliver("work_order.status_changed", self._row(), "q-progress")
+        not_testing = SimpleNamespace(module=SimpleNamespace(current_test=False))
+        cron = type(self.env["ir.cron"])
+        with patch.object(cron, "_commit_progress", autospec=True, return_value=60.0) as progress, \
+                patch.object(openmes_webhook, "modules", not_testing), self.mock_openmes():
+            self._process()
+        self.assertEqual(self._event("q-progress").state, "done")
+        progress.assert_called_once()
+        _model, processed = progress.call_args.args
+        self.assertEqual((processed, progress.call_args.kwargs), (1, {"remaining": 0}))
+
     def test_cron_processes_and_marks_done(self):
         self._deliver("work_order.status_changed", self._row(), "q-2")
         with self.mock_openmes():
@@ -382,7 +399,7 @@ class TestSendRace(QueueCase):
             self._process()
         self.assertEqual(self._event("bo-done").state, "done")
         self.assertEqual(production.state, "done")
-        backorder = production.procurement_group_id.mrp_production_ids - production
+        backorder = production._openmes_backorder_family() - production
         self.assertEqual(len(backorder), 1)
         backorder_wo = backorder.openmes_work_order_ids
         self.assertEqual(backorder_wo.state, "to_send")

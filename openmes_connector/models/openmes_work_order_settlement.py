@@ -65,9 +65,9 @@ class OpenmesWorkOrderConsumption(models.Model):
         readonly=True,
         help="Lots picked for this material in OpenMES, with the picked quantity in brackets.",
     )
-    consumed_qty = fields.Float("Consumed", digits="Product Unit of Measure", readonly=True)
-    scrap_qty = fields.Float("Scrapped", digits="Product Unit of Measure", readonly=True)
-    returned_qty = fields.Float("Returned", digits="Product Unit of Measure", readonly=True)
+    consumed_qty = fields.Float("Consumed", digits="Product Unit", readonly=True)
+    scrap_qty = fields.Float("Scrapped", digits="Product Unit", readonly=True)
+    returned_qty = fields.Float("Returned", digits="Product Unit", readonly=True)
     unit_of_measure = fields.Char(
         "Unit", readonly=True, help="The unit of measure as OpenMES sent it; it is not converted."
     )
@@ -89,7 +89,7 @@ class OpenmesWorkOrder(models.Model):
     settlement_date = fields.Datetime("Settlement Fetched On", readonly=True, copy=False)
     scrap_qty = fields.Float(
         "Scrap",
-        digits="Product Unit of Measure",
+        digits="Product Unit",
         readonly=True,
         copy=False,
         help="Total scrap reported in OpenMES, in the unit of measure of the work order's product.",

@@ -134,11 +134,21 @@ class MrpProduction(models.Model):
             line = production.sale_line_id
         return line
 
+    def _openmes_backorder_family(self):
+        """The MO and all its backorders (Odoo 19 links them by production group)."""
+        self.ensure_one()
+        return self.production_group_id.production_ids
+
     def _openmes_origin_sale_order(self):
         """The sale order this MO was made for, if any."""
         self.ensure_one()
         production = self.sudo()
-        order = production._openmes_origin_sale_line().order_id or production.procurement_group_id.sale_id
+        order = production._openmes_origin_sale_line().order_id
+        if not order:
+            # Odoo 19 stock references can link an MO to several sale orders;
+            # only an unambiguous one counts (Odoo 18 had a single sale_id).
+            sale_orders = production.reference_ids.sale_ids
+            order = sale_orders if len(sale_orders) == 1 else order
         if not order and production.origin:
             # Last resort: "origin" is free text ("S00012", "S1, S2", an orderpoint…),
             # so only an exact match counts.

@@ -80,7 +80,8 @@ class OpenmesWorkOrder(models.Model):
     )
     production_lot_name = fields.Char(
         "Finished Product Lot",
-        related="production_id.lot_producing_id.name",
+        compute="_compute_production_lot_name",
+        compute_sudo=True,
         help="Lot of the finished product on the manufacturing order. Odoo creates it when it "
         "closes the order after OpenMES, unless one was set by hand.",
     )
@@ -113,7 +114,7 @@ class OpenmesWorkOrder(models.Model):
     )
     planned_qty = fields.Float(
         "Planned Quantity",
-        digits="Product Unit of Measure",
+        digits="Product Unit",
         readonly=True,
         tracking=True,
         help="The quantity Odoo asks for. While a change request is open it can "
@@ -121,11 +122,11 @@ class OpenmesWorkOrder(models.Model):
     )
     mes_planned_qty = fields.Float(
         "Planned in OpenMES",
-        digits="Product Unit of Measure",
+        digits="Product Unit",
         readonly=True,
         help="The quantity OpenMES is currently planned to produce.",
     )
-    produced_qty = fields.Float("Produced Quantity", digits="Product Unit of Measure", readonly=True)
+    produced_qty = fields.Float("Produced Quantity", digits="Product Unit", readonly=True)
     state = fields.Selection(
         [
             ("to_send", "To Send"),
@@ -164,9 +165,13 @@ class OpenmesWorkOrder(models.Model):
     attempt_count = fields.Integer(readonly=True)
     last_error = fields.Text(readonly=True)
 
-    _sql_constraints = [
-        ("name_unique", "unique(name)", "An OpenMES order number must be unique."),
-    ]
+    _name_unique = models.Constraint("unique(name)", "An OpenMES order number must be unique.")
+
+    @api.depends("production_id.lot_producing_ids.name")
+    def _compute_production_lot_name(self):
+        # Since Odoo 19 an MO can carry several finished lots / serial numbers.
+        for record in self:
+            record.production_lot_name = ", ".join(record.production_id.lot_producing_ids.mapped("name")) or False
 
     @api.depends("sale_order_id.company_id", "production_id.company_id")
     def _compute_company_id(self):
@@ -308,7 +313,7 @@ class OpenmesWorkOrder(models.Model):
             # Net price per product UoM. OpenMES stores two decimals and treats
             # any other price on an order in production as a locked-field change,
             # so round the same way it does.
-            qty = line.product_uom._compute_quantity(line.product_uom_qty, self.product_id.uom_id, round=False)
+            qty = line.product_uom_id._compute_quantity(line.product_uom_qty, self.product_id.uom_id, round=False)
             if qty:
                 payload["unit_price"] = max(0.0, float_round(line.price_subtotal / qty, precision_digits=2))
                 payload["price_currency"] = order.currency_id.name
@@ -727,11 +732,11 @@ class OpenmesWorkOrder(models.Model):
                 continue
             qty = record.product_id.uom_id._compute_quantity(record.produced_qty, uom, rounding_method="HALF-UP")
             under_produced = float_compare(qty, production.product_qty, precision_rounding=uom.rounding) < 0
-            siblings = production.procurement_group_id.mrp_production_ids
+            siblings = production._openmes_backorder_family()
             error = None
             try:
                 with self.env.cr.savepoint():
-                    if production.product_id.tracking == "lot" and not production.lot_producing_id:
+                    if production.product_id.tracking == "lot" and not production.lot_producing_ids:
                         # Before qty_producing, so the finished move lines get the lot.
                         record._openmes_generate_finished_lot(production)
                     production.qty_producing = qty
@@ -772,7 +777,7 @@ class OpenmesWorkOrder(models.Model):
                 )
                 continue
             record.last_error = False
-            backorder = production.procurement_group_id.mrp_production_ids - siblings
+            backorder = production._openmes_backorder_family() - siblings
             if under_produced and backorder:
                 # The backorder (with its own work order) carries the rest: this
                 # work order planned what was made, so it is no quantity difference.
@@ -792,8 +797,10 @@ class OpenmesWorkOrder(models.Model):
                     uom=uom.name,
                     order=record.name,
                 )
-            if production.lot_producing_id:
-                message += " " + _("Finished product lot: %(lot)s.", lot=production.lot_producing_id.name)
+            if production.lot_producing_ids:
+                message += " " + _(
+                    "Finished product lot: %(lot)s.", lot=", ".join(production.lot_producing_ids.mapped("name"))
+                )
                 # The lot also belongs on the OpenMES work order (set by hand or by Odoo).
                 record.sudo().message_post(body=message)
             record._post_on_source(message)
@@ -810,7 +817,7 @@ class OpenmesWorkOrder(models.Model):
         self.ensure_one()
         # Ignores the auto-print action it may return: nobody sees it in a cron.
         production.action_generate_serial()
-        lot = production.lot_producing_id
+        lot = production.lot_producing_ids[:1]
         if not lot:
             raise UserError(_("Odoo could not create a lot for the finished product."))
         message = _(

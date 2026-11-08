@@ -15,3 +15,4 @@ from . import test_webhook_queue
 from . import test_workstations
 from . import test_material_lots
 from . import test_mo_cost
+from . import test_odoo19_constraints

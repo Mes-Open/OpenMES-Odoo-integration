@@ -69,7 +69,7 @@ class OpenmesWorkOrder(models.Model):
         "state",
         "pending_cancel",
         "change_request_status",
-        "product_id.uom_id.rounding",
+        "product_id.uom_id",
     )
     def _compute_qty_discrepancy(self):
         for record in self:

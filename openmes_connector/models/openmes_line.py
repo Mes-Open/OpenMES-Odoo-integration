@@ -53,10 +53,10 @@ class OpenmesLine(models.Model):
     openmes_updated_at = fields.Datetime("Changed in OpenMES", readonly=True)
     last_refresh = fields.Datetime("Last Refresh", readonly=True)
 
-    _sql_constraints = [
-        # Same name as before: two OpenMES instances may both have a line "L1".
-        ("code_uniq", "unique(code, company_id)", "An OpenMES line with this code already exists in this company."),
-    ]
+    # Same name as before: two OpenMES instances may both have a line "L1".
+    _code_uniq = models.Constraint(
+        "unique(code, company_id)", "An OpenMES line with this code already exists in this company."
+    )
 
     @api.constrains("code")
     def _check_code(self):

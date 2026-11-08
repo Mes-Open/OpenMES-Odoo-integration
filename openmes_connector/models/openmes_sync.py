@@ -268,7 +268,11 @@ class OpenmesSync(models.AbstractModel):
             line_code = False
         steps = []
         for index, operation in enumerate(self._routing_operations(product, bom)[:MAX_ROUTING_STEPS], start=1):
-            capacity = operation.workcenter_id.default_capacity or 1.0
+            # Units made per cycle, as Odoo 19 plans it (mrp.routing.workcenter):
+            # the work center's capacity row for the product or its unit, else
+            # one cycle makes the whole BoM quantity. Converted to the product unit.
+            capacity = operation.workcenter_id._get_capacity(product, bom.product_uom_id, bom.product_qty or 1.0)[0]
+            capacity = bom.product_uom_id._compute_quantity(capacity, product.uom_id, round=False) or 1.0
             step = {
                 "step_number": index * 10,
                 "name": (operation.name or _("Operation %s", index))[:255],
@@ -277,8 +281,11 @@ class OpenmesSync(models.AbstractModel):
                     (operation.time_cycle_manual or 0.0) / capacity, precision_digits=4
                 ),
             }
-            if operation.note:
-                step["instruction"] = html2plaintext(operation.note)[:10000] or None
+            # Odoo 19 Community has no operation description ("note"); a module
+            # that adds it back (e.g. Enterprise) still gets it sent.
+            note = operation.note if "note" in operation._fields else False
+            if note:
+                step["instruction"] = html2plaintext(note)[:10000] or None
             # Without a code the planner picks the workstation in OpenMES.
             # A changed code changes the routing, so the next sync makes a
             # new version; an unchanged one is skipped by OpenMES.

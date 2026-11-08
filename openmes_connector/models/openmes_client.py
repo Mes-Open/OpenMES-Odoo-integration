@@ -65,7 +65,7 @@ API_KEY_PREFIX = "omk_"
 DEFAULT_ORDER_PREFIX = "ODOO"
 REQUEST_TIMEOUT = 20
 EXPORT_PAGE_SIZE = 500
-USER_AGENT = "odoo-openmes-connector/18.0.1.1.8"
+USER_AGENT = "odoo-openmes-connector/19.0.1.0.0"
 
 # Scopes the module uses, in the order Test Connection lists them.
 REQUIRED_SCOPES = (

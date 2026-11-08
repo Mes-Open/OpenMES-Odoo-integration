@@ -29,10 +29,7 @@ class OpenmesMaterialLotSent(models.Model):
         "Refused Zeros", readonly=True, help="Runs in a row in which OpenMES refused this lot's 0."
     )
 
-    _sql_constraints = [
-        (
-            "warehouse_lot_unique",
-            "unique(warehouse_id, material_code, lot_number)",
-            "A lot is remembered once per warehouse.",
-        ),
-    ]
+    _warehouse_lot_unique = models.Constraint(
+        "unique(warehouse_id, material_code, lot_number)",
+        "A lot is remembered once per warehouse.",
+    )

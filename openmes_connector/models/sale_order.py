@@ -79,7 +79,7 @@ class SaleOrder(models.Model):
                     "sale_line_id": line.id,
                     "product_id": product.id,
                     "line_code": product.product_tmpl_id._openmes_line_code_for(company),
-                    "planned_qty": line.product_uom._compute_quantity(
+                    "planned_qty": line.product_uom_id._compute_quantity(
                         line.product_uom_qty, product.uom_id, round=False
                     ),
                 }
@@ -99,14 +99,14 @@ class SaleOrderLine(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if {"product_uom_qty", "product_uom", "name"} & set(vals):
+        if {"product_uom_qty", "product_uom_id", "name"} & set(vals):
             confirmed = self.filtered(lambda line: line.order_id.state == "sale")
             if confirmed:
                 work_orders = self.env["openmes.work.order"].sudo().search([("sale_line_id", "in", confirmed.ids)])
                 for work_order in work_orders:
                     line = work_order.sale_line_id
                     work_order._openmes_request_update(
-                        {"planned_qty": line.product_uom._compute_quantity(
+                        {"planned_qty": line.product_uom_id._compute_quantity(
                             line.product_uom_qty, work_order.product_id.uom_id, round=False
                         )}
                     )
