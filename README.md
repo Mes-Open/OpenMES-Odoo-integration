@@ -61,3 +61,12 @@ One branch per Odoo version: `18.0`.
 ## License
 
 LGPL-3 — see [LICENSE](LICENSE) and [COPYING](COPYING).
+
+## Contact
+
+Questions, implementation help, bug reports and feature requests:
+**[contact@getopenmes.com](mailto:contact@getopenmes.com)**
+
+---
+
+<p align="center"><a href="https://getopenmes.com"><b>getopenmes.com</b></a></p>
