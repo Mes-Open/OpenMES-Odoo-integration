@@ -1,6 +1,6 @@
 {
     "name": "OpenMES Connector",
-    "version": "18.0.1.1.15",
+    "version": "18.0.1.1.16",
     "category": "Manufacturing",
     "summary": "Send Odoo sale orders or manufacturing orders to OpenMES as work orders and get status, "
     "change requests, settlements and stock documents back",

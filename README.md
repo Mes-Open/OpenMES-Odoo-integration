@@ -31,12 +31,17 @@ orders closed automatically. [Download / play the MP4](https://github.com/Mes-Op
 
 Full configuration and usage: [`openmes_connector/README.rst`](openmes_connector/README.rst).
 
+## Get OpenMES
+
+OpenMES is free and open source. Download it, with installation instructions, from its
+repository on GitHub: **[github.com/Mes-Open/OpenMes](https://github.com/Mes-Open/OpenMes)**.
+
 ## Requirements
 
 | | |
 |---|---|
 | Odoo | 18.0 (Community or Enterprise) — `sale_management`, `sale_stock`, `mrp` |
-| OpenMES | a version with the ERP integration API (API keys with scopes, change requests, webhooks) |
+| OpenMES | free and open source — download it from [github.com/Mes-Open/OpenMes](https://github.com/Mes-Open/OpenMes); a version with the ERP integration API (API keys with scopes, change requests, webhooks) |
 | Hosting | Odoo.sh or on-premise. Custom modules cannot be installed on Odoo Online (SaaS). |
 
 ## Installation
@@ -56,7 +61,7 @@ sent anywhere else.
 
 ## Branches
 
-One branch per Odoo version: `18.0`.
+One branch per Odoo version: `18.0`, `19.0`, `20.0`.
 
 ## License
 
